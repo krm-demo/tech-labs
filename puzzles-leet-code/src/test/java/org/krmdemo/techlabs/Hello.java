@@ -11,7 +11,7 @@ public class Hello {
      * @param args command-line arguments
      */
     public static void main(String[] args) {
-        System.out.println("Hello " + Hello.class.getSimpleName());
+        System.out.println("Hello " + Hello.class);
         log.info("Hello from {}'s logging !!!", Hello.class.getSimpleName());
     }
 }
