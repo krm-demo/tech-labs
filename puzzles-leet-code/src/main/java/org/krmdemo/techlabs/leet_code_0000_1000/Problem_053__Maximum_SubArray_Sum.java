@@ -25,6 +25,7 @@ public interface Problem_053__Maximum_SubArray_Sum {
 
     enum Solution implements Problem_053__Maximum_SubArray_Sum {
         DEFAULT {
+            @Override
             public int maxSubArray(int[] nums) {
                 int[] cumArr = cumulativeSum(nums);
                 int[] cumMinArr = cumulativeMin(cumArr);
