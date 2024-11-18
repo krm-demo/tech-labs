@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
  *  -10^4 <=   nums[i]   <= 10^4
  * </pre>
  */
-public interface Problem__53__Maximum_SubArray_Sum {
+public interface Problem_053__Maximum_SubArray_Sum {
 
     /**
      * Solution entry-point.
@@ -23,7 +23,7 @@ public interface Problem__53__Maximum_SubArray_Sum {
      */
     int maxSubArray(int[] nums);
 
-    enum Solution implements Problem__53__Maximum_SubArray_Sum {
+    enum Solution implements Problem_053__Maximum_SubArray_Sum {
         DEFAULT {
             public int maxSubArray(int[] nums) {
                 int[] cumArr = cumulativeSum(nums);
