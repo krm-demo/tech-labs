@@ -21,6 +21,27 @@ public class TestCase_031__Next_Permutation {
     private final RandomHelper rnd = new RandomHelper(-1);
 
     @Test
+    public void test_ex_01() {
+        int[] numsArr = new int[] { 1, 2, 3 };
+        sln.nextPermutation(numsArr);
+        assertThat(numsArr).isEqualTo(new int[] { 1, 3, 2 });
+    }
+
+    @Test
+    public void test_ex_02() {
+        int[] numsArr = new int[] { 3, 2, 1 };
+        sln.nextPermutation(numsArr);
+        assertThat(numsArr).isEqualTo(new int[] { 1, 2, 3 });
+    }
+
+    @Test
+    public void test_ex_03() {
+        int[] numsArr = new int[] { 1, 1, 5 };
+        sln.nextPermutation(numsArr);
+        assertThat(numsArr).isEqualTo(new int[] { 1, 5, 1 });
+    }
+
+    @Test
     public void testDuplicates() {
         int[] numsArr = new int[] { 5, 1, 1 };
         sln.nextPermutation(numsArr);
