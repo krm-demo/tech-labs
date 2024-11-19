@@ -3,9 +3,9 @@ package org.krmdemo.techlabs.leet_code_1000_2000;
 import java.util.*;
 
 /**
- * <a href="https://leetcode.com/problems/the-kth-factor-of-n/?envType=study-plan-v2&envId=amazon-spring-23-high-frequency">
- *     <h3>1492. The kth Factor of n</h3>
- * </a>
+ * <h3><a href="https://leetcode.com/problems/the-kth-factor-of-n/?envType=study-plan-v2&envId=amazon-spring-23-high-frequency">
+ *     1492. The kth Factor of <code>n</code>
+ * </a></h3>
  * You are given two positive integers <b><code>N</code></b> and <b><code>K</code></b>.
  * <p><small>
  * A factor of an integer <b><code>n</code></b> is defined as an integer <b><code>i</code></b>

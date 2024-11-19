@@ -2,6 +2,8 @@ package org.krmdemo.techlabs.leet_code_0000_1000;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.*;
+
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,5 +20,17 @@ public class TestCase_046__Permutations {
             asList(1,2,3), asList(1,3,2), asList(2,1,3),
             asList(2,3,1), asList(3,1,2), asList(3,2,1)
         ));
+    }
+
+    @Test
+    public void test_ex_02() {
+        assertThat(sln.permute(new int[] { 0, 1 })).isEqualTo(asList(
+            asList(0, 1), asList(1, 0)
+        ));
+    }
+
+    @Test
+    public void test_ex_03() {
+        assertThat(sln.permute(new int[] { 123 })).isEqualTo(List.of(List.of(123)));
     }
 }
