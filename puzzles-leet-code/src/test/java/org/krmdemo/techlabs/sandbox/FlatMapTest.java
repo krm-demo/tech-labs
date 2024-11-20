@@ -3,7 +3,6 @@ package org.krmdemo.techlabs.sandbox;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.ToIntBiFunction;
 import java.util.function.ToIntFunction;
@@ -13,6 +12,9 @@ import static java.lang.Math.round;
 import static java.lang.Math.toIntExact;
 import static java.util.stream.IntStream.range;
 
+/**
+ * Test-case to play with flat-mappers (like sliding-window, etc...)
+ */
 public class FlatMapTest {
 
     @FunctionalInterface
