@@ -116,14 +116,37 @@ public interface Problem_2638__Count_K_Free_SubSets {
 
                 NavigableSet<Pair> pairsSorted = new TreeSet<>(comparatorPair);
                 pairsSorted.addAll(pairsSet);
-                System.out.printf("-------- Solution.MATH ( K = %d ) : --------%n", K);
-                System.out.printf("valuesAll (size = %d) --> %s;%n", valuesAll.cardinality(), valuesAll);
-                System.out.printf("pairsSet  (size = %d) --> %s;%n", pairsSorted.size(), pairsSorted);
-                System.out.printf("valuesLeft   (size = %d) --> %s;%n", valuesLeft.cardinality(), valuesLeft);
-                System.out.printf("valuesRight  (size = %d) --> %s;%n", valuesRight.cardinality(), valuesRight);
-                System.out.printf("valuesMiddle (size = %d) --> %s;%n", valuesMiddle.cardinality(), valuesMiddle);
+//                System.out.printf("-------- Solution.MATH ( K = %d ) : --------%n", K);
+//                System.out.printf("valuesAll (size = %d) --> %s;%n", valuesAll.cardinality(), valuesAll);
+//                System.out.printf("pairsSet  (size = %d) --> %s;%n", pairsSorted.size(), pairsSorted);
+//                System.out.printf("valuesLeft   (size = %d) --> %s;%n", valuesLeft.cardinality(), valuesLeft);
+//                System.out.printf("valuesRight  (size = %d) --> %s;%n", valuesRight.cardinality(), valuesRight);
+//                System.out.printf("valuesMiddle (size = %d) --> %s;%n", valuesMiddle.cardinality(), valuesMiddle);
 
-                return -1;
+                int p = pairsSet.size();
+                int q = valuesMiddle.cardinality(); // <-- not counted yet: TODO: fix it
+                int n = valuesAll.cardinality();
+                long countAll = (1L << n);
+//                System.out.printf("countAll = %,d;%n", countAll);
+                long kTotal = kTotalCount(n, p);
+                System.out.printf("kTotalCount ( n = %d, p = %d, q = %d ) = %,d;%n", n, p, q, kTotal);
+                return countAll - kTotal;
+            }
+
+            /**
+             * Recurrent formula is following:<pre>
+             *     kTotal(n,p) = 2^(n-2) + 3 * kTotal(n-2,p-1)
+             * </pre>
+             *
+             * @param n the current number of elements in set
+             * @param p the current number of "k-pairs" in set
+             * @return the number of subsets, where at least one "k-pair" is present
+             */
+            long kTotalCount(int n, int p) {
+                if (p == 0 || n < 2) {
+                    return 0;
+                }
+                return (1L << (n - 2)) + 3 * kTotalCount(n - 2, p - 1);
             }
 
             public static BitSet intersect(BitSet bsOne, BitSet bsTwo) {

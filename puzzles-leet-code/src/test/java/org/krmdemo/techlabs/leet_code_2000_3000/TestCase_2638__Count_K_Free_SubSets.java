@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -128,113 +127,93 @@ public class TestCase_2638__Count_K_Free_SubSets {
         slnMath.countTheNumOfKFreeSubsets(nums, 6);
     }
 
-
     @Test
-    void testCase_two_prohibited() {
-        {
-            int kNotFreeOne = 7;
-            int kNotFreeTwo = 8;
-            System.out.printf("%n... kNotFree --> %s : ...%n", asList(kNotFreeOne, kNotFreeTwo));
-            for (int N = 1; N < 12; N++) {
-                int[] nums10s = IntStream.rangeClosed(1, N).map(v -> 10 * v).toArray();
-                int[] nums = IntStream.concat(
-                    IntStream.of(kNotFreeOne, kNotFreeTwo),
-                    Arrays.stream(nums10s)
-                ).toArray();
-                long kFreeCount = sln.countTheNumOfKFreeSubsets(nums, 1);
-                long totalCount = 1 << (N + 2);
-                long totalOthers = 1 << N;
-                System.out.printf("%2d) totalCount = %,d; totalOthers = %,d; kFreeCount = %,d; ---> %s; %n",
-                    N + 2, totalCount, totalOthers, kFreeCount, Arrays.toString(nums));
-
-                slnMath.countTheNumOfKFreeSubsets(nums, 1);
-            }
-        } {
-            int kNotFreeOne = 8;
-            int kNotFreeTwo = 9;
-            System.out.printf("%n... kNotFree --> %s : ...%n", asList(kNotFreeOne, kNotFreeTwo));
-            for (int N = 1; N < 12; N++) {
-                int[] nums10s = IntStream.rangeClosed(1, N).map(v -> 10 * v).toArray();
-                int[] nums = IntStream.concat(
-                    IntStream.of(kNotFreeOne, kNotFreeTwo),
-                    Arrays.stream(nums10s)
-                ).toArray();
-                long kFreeCount = sln.countTheNumOfKFreeSubsets(nums, 1);
-                long totalCount = 1 << (N + 2);
-                long totalOthers2 = 1 << N;
-                long totalOthers3 = 1 << (N - 1);
-                System.out.printf("%2d) totalCount = %,d; totalOthers = %,d / %,d; kFreeCount = %,d; ---> %s; %n",
-                    N + 2, totalCount, totalOthers2, totalOthers3, kFreeCount, Arrays.toString(nums));
-
-                slnMath.countTheNumOfKFreeSubsets(nums, 1);
-            }
-        } {
-            int kNotFreeOne = 7;
-            int kNotFreeTwo = 8;
-            int kNotFreeThree = 9;
-            System.out.printf("%n... kNotFree --> %s : ...%n", asList(kNotFreeOne, kNotFreeTwo, kNotFreeThree));
-            for (int N = 1; N < 12; N++) {
-                int[] nums10s = IntStream.rangeClosed(1, N).map(v -> 10 * v).toArray();
-                int[] nums = IntStream.concat(
-                    IntStream.of(kNotFreeOne, kNotFreeTwo, kNotFreeThree),
-                    Arrays.stream(nums10s)
-                ).toArray();
-                long kFreeCount = sln.countTheNumOfKFreeSubsets(nums, 1);
-                long totalCount = 1 << (N + 3);
-                long totalOthers2 = 1 << (N + 1);
-                long totalOthers3 = 1 << (N);
-                System.out.printf("%2d) totalCount = %,d; totalOthers = %,d / %,d; kFreeCount = %,d; ---> %s; %n",
-                    N + 3, totalCount, totalOthers2, totalOthers3, kFreeCount, Arrays.toString(nums));
-
-                slnMath.countTheNumOfKFreeSubsets(nums, 1);
-            }
-        }
-    }
-
-    @Test
-    void testCase_two_x_two_prohibited() {
-        int kNotFreeOne = 3;
-        int kNotFreeTwo = 4;
-        int kNotFreeThree = 9;
-        System.out.printf("%n... kNotFree --> %s : ...%n", asList(kNotFreeOne, kNotFreeTwo, kNotFreeThree));
+    void testCase_pairs_2_no_overlap() {
+        int[] kNotFreeArr = new int[] { 3, 4, 9 };
+        System.out.printf("%n... kNotFree with %s : ...%n", Arrays.toString(kNotFreeArr));
+        long kFreeCount0 = sln.countTheNumOfKFreeSubsets(kNotFreeArr, 1);
+        long kFreeCountMath0 = slnMath.countTheNumOfKFreeSubsets(kNotFreeArr, 1);
+        System.out.printf("%2d) kFreeCount = %,d; kFreeCountMath = %,d ---> %s; %n",
+            kNotFreeArr.length, kFreeCount0, kFreeCountMath0, Arrays.toString(kNotFreeArr));
         for (int N = 1; N < 12; N++) {
             int[] nums10s = IntStream.rangeClosed(1, N).map(v -> 10 * v).toArray();
             int[] nums = IntStream.concat(
-                IntStream.of(kNotFreeOne, kNotFreeTwo, kNotFreeThree),
+                Arrays.stream(kNotFreeArr),
                 Arrays.stream(nums10s)
             ).toArray();
             long kFreeCount = sln.countTheNumOfKFreeSubsets(nums, 1);
-            long totalCount = 1 << (N + 3);
-            long totalOthers2 = 1 << (N + 1);
-            long totalOthers3 = 1 << (N);
-            System.out.printf("%2d) totalCount = %,d; totalOthers = %,d / %,d; kFreeCount = %,d; ---> %s; %n",
-                N + 3, totalCount, totalOthers2, totalOthers3, kFreeCount, Arrays.toString(nums));
-
-            slnMath.countTheNumOfKFreeSubsets(nums, 1);
+            long kFreeCountMath = slnMath.countTheNumOfKFreeSubsets(nums, 1);
+            System.out.printf("%2d) kFreeCount = %,d; kFreeCountMath = %,d ---> %s; %n",
+                nums.length, kFreeCount, kFreeCountMath, Arrays.toString(nums));
+            assertThat(kFreeCount)
+                .describedAs("kFreeCount for K = 1, p = 2, q = 0; size = " + nums.length)
+                .isEqualTo(kFreeCountMath);
+        }
+        int N = 8;
+        int[] numsTo80 = IntStream.rangeClosed(1, N).map(v -> 10 * v).toArray();
+        System.out.printf("%n... kNotFree with %d two-sliding biases : ...%n", N - 1);
+        for (int bias = 1; bias < N; bias++) {
+            final int biasValue = 10 * bias;
+            int[] kNotFreeBiased = Arrays.stream(kNotFreeArr).map(i -> i + biasValue).toArray();
+            int[] nums = IntStream.concat(
+                Arrays.stream(kNotFreeBiased),
+                Arrays.stream(numsTo80)
+            ).toArray();
+            long kFreeCount = sln.countTheNumOfKFreeSubsets(nums, 1);
+            long kFreeCountMath = slnMath.countTheNumOfKFreeSubsets(nums, 1);
+            System.out.printf("%2d) kFreeCount = %,d; kFreeCountMath = %,d ---> %s; %n",
+                bias, kFreeCount, kFreeCountMath, Arrays.toString(nums));
+            assertThat(kFreeCount)
+                .describedAs("kFreeCount size = 11, K = 1, p = 2, q = 0; bias(2) = " + bias)
+                .isEqualTo(kFreeCountMath);
+        }
+        System.out.printf("%n... kNotFree with %d one-sliding biases : ...%n", N - 1);
+        for (int bias = 1; bias < N; bias++) {
+            int[] kNotFreeBiased = new int[] { kNotFreeArr[0], kNotFreeArr[1], kNotFreeArr[2] + 10 * bias };
+            int[] nums = IntStream.concat(
+                Arrays.stream(kNotFreeBiased),
+                Arrays.stream(numsTo80)
+            ).toArray();
+            long kFreeCount = sln.countTheNumOfKFreeSubsets(nums, 1);
+            long kFreeCountMath = slnMath.countTheNumOfKFreeSubsets(nums, 1);
+            System.out.printf("%2d) kFreeCount = %,d; kFreeCountMath = %,d ---> %s; %n",
+                bias, kFreeCount, kFreeCountMath, Arrays.toString(nums));
+            assertThat(kFreeCount)
+                .describedAs("kFreeCount size = 11, K = 1, p = 2, q = 0; bias(1) = " + bias)
+                .isEqualTo(kFreeCountMath);
         }
     }
 
     @Test
-    void testCase_two_x_two_x_two_prohibited() {
-        int kNotFreeOne = 3;
-        int kNotFreeTwo = 4;
-        int kNotFreeThree = 9;
-        int kNotFreeFour = 19;
-        System.out.printf("%n... kNotFree --> %s : ...%n", asList(kNotFreeOne, kNotFreeTwo, kNotFreeThree, kNotFreeFour));
-        for (int N = 2; N < 12; N++) {
-            int[] nums10s = IntStream.rangeClosed(1, N).map(v -> 10 * v).toArray();
-            int[] nums = IntStream.concat(
-                IntStream.of(kNotFreeOne, kNotFreeTwo, kNotFreeThree, kNotFreeFour),
-                Arrays.stream(nums10s)
-            ).toArray();
-            long kFreeCount = sln.countTheNumOfKFreeSubsets(nums, 1);
-            long totalCount = 1 << (N + 4);
-            long totalOthers2 = 1 << (N + 2);
-            long totalOthers3 = 1 << (N + 1);
-            System.out.printf("%2d) totalCount = %,d; totalOthers = %,d / %,d; kFreeCount = %,d; ---> %s; %n",
-                N + 4, totalCount, totalOthers2, totalOthers3, kFreeCount, Arrays.toString(nums));
+    void testCase_pairs_m_overlap_1() {
+        int[][] kNotFreeM = new int[][] {
+            { 2,3,4, 10,11,    20,  30,31,  40,  50},
+            { 2,3,   10,11,12, 20,  30,31,  40,  50},
+            { 2,3,   10,       20,  30,31,  40,  50, 51, 52}
+        };
+        for (int[] kNotFreeArr : kNotFreeM) {
+            slnMath.countTheNumOfKFreeSubsets(kNotFreeArr, 1);
+            long kFreeCount0 = sln.countTheNumOfKFreeSubsets(kNotFreeArr, 1);
+            System.out.printf("%2d) kFreeCount = %,d ---> %s; %n",
+                kNotFreeArr.length, kFreeCount0, Arrays.toString(kNotFreeArr));
+        }
+    }
 
-            slnMath.countTheNumOfKFreeSubsets(nums, 1);
+    @Test
+    void testCase_pairs_m_overlap_2() {
+        int[][] kNotFreeM = new int[][] {
+            { 2,3,4,5,  10,11,     20,21,        30,        40,41,        50},
+            { 2,3,      10,11,     20,21,22,23,  30,        40,41,        50},
+            { 2,3,      10,11,     20,           30,        40,41,42,43,  50,51},
+            { 2,3,4,    10,11,12,  20,           30,31,     40,           50,51},
+            { 2,3,      10,11,12,  20,21,22,     30,        40,41,        50},
+            { 2,        10,11,12,  20,21,        30,31,32,  40,41,        50},
+        };
+        for (int[] kNotFreeArr : kNotFreeM) {
+            slnMath.countTheNumOfKFreeSubsets(kNotFreeArr, 1);
+            long kFreeCount0 = sln.countTheNumOfKFreeSubsets(kNotFreeArr, 1);
+            System.out.printf("%2d) kFreeCount = %,d ---> %s; %n",
+                kNotFreeArr.length, kFreeCount0, Arrays.toString(kNotFreeArr));
         }
     }
 }

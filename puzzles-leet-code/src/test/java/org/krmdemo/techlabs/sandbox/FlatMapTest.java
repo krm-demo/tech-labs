@@ -2,11 +2,19 @@ package org.krmdemo.techlabs.sandbox;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 import java.util.function.ToIntBiFunction;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.lang.Math.round;
 import static java.lang.Math.toIntExact;
@@ -71,5 +79,21 @@ public class FlatMapTest {
             }
         ));
         System.out.println(skipped4.boxed().toList());
+    }
+
+    @Test
+    void testGroupByMod() {
+        final int K = 5;
+        int[] rangeN = range(0, 18).toArray();
+        Map<Integer, List<Integer>> mapByMod =
+            Arrays.stream(rangeN).boxed()
+                .collect(Collectors.groupingBy(
+            v -> v % K
+            ));
+        System.out.println("rangeN --> " + Arrays.toString(rangeN));
+        System.out.printf("mapByMod ( %d groups ) :%n", mapByMod.size());
+        mapByMod.forEach((mod, modList) ->
+            System.out.printf("mod = %d --> %s;%n", mod, modList)
+        );
     }
 }

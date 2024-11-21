@@ -118,11 +118,14 @@ public interface Problem_031__Next_Permutation {
         }
 
         /**
-         * Looking for the index of element int the tail of passed array <b><code>nums</code></b>
+         * Looking for the index of element in the tail of passed array <b><code>nums</code></b>
          * since the index begin, whose value is greater than passed value <b><code>valueToCeil</code></b>,
          * but is the smallest one among other elements in the given tail of array.
-         * <p/>
-         * Semantic is similar to {@link Math#ceil(double)} or to {@link NavigableSet#ceiling(Object)}
+         * The tail of array is already sorted in descending order,
+         * so - it's just enough to go from the end and pick the one,
+         * which is greater than passed parameter <code>valueToCeil</code>
+         * <hr/>
+         * Semantic of the method name is similar to {@link Math#ceil(double)} or to {@link NavigableSet#ceiling(Object)}
          *
          * @param nums an array in whose tail the proper element is looking for
          * @param begin the start of the array's tail <code>0 <= begin < nums.length</code>
