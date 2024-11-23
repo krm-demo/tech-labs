@@ -12,6 +12,11 @@ import java.util.stream.IntStream;
  *      1 <= nums.length <= 10^5
  *  -10^4 <=   nums[i]   <= 10^4
  * </pre>
+ *
+ * @see Problem_121__Buy_And_Sell_Stock
+ * @see <a href="https://medium.com/@rsinghal757/kadanes-algorithm-dynamic-programming-how-and-why-does-it-work-3fd8849ed73d">
+ *     Kadane’s Algorithm — (Dynamic Programming) — How and Why Does it Work?
+ * </a>
  */
 public interface Problem_053__Maximum_SubArray_Sum {
 

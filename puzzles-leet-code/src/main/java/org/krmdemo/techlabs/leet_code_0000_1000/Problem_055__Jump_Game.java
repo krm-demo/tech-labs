@@ -16,6 +16,8 @@ import java.util.stream.IntStream;
  *  1 <= nums.length <= 10^4
  *  0 <= nums[i] <= 10^5</pre>
  * TODO: write test-case
+ *
+ * @see Problem_045__Jump_Game_II
  */
 public interface Problem_055__Jump_Game {
 

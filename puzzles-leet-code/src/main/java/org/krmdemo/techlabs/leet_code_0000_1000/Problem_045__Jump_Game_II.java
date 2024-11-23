@@ -20,6 +20,8 @@ import java.util.*;
  *  it's guaranteed that you can reach nums[n - 1]
  * </pre>
  * TODO: write test-case
+ *
+ * @see Problem_055__Jump_Game
  */
 public interface Problem_045__Jump_Game_II {
 

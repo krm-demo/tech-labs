@@ -2,19 +2,12 @@ package org.krmdemo.techlabs.sandbox;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.function.IntFunction;
-import java.util.function.Supplier;
 import java.util.function.ToIntBiFunction;
 import java.util.function.ToIntFunction;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static java.lang.Math.round;
 import static java.lang.Math.toIntExact;
@@ -59,26 +52,26 @@ public class FlatMapTest {
 
     @Test
     void testPrevNext() {
-        IntStream skipped4 = range(0,10).flatMap(prevNext(
+        IntStream prevNext = range(0,10).flatMap(prevNext(
             (prev, next) -> {
                 int multPrevNext = prev * next;
                 System.out.printf("( %s, %s ) --> %d;%n", prev, next, multPrevNext);
                 return multPrevNext;
             }
         ));
-        System.out.println(skipped4.boxed().toList());
+        System.out.println(prevNext.boxed().toList());
     }
 
     @Test
     void testTriplet() {
-        IntStream skipped4 = range(0,15).flatMap(triplet(
+        IntStream prevCurrNext = range(0,15).flatMap(triplet(
             (prev, curr, next) -> {
                 double trpletRes = 1.0 * prev * next / curr;
                 System.out.printf("( %2d, %2d, %2d ) --> %.2f;%n", prev, curr, next, trpletRes);
                 return toIntExact(round(trpletRes));
             }
         ));
-        System.out.println(skipped4.boxed().toList());
+        System.out.println(prevCurrNext.boxed().toList());
     }
 
     @Test
