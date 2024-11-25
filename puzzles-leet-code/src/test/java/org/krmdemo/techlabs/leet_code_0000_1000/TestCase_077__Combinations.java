@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 
 /**
  * Test-Case for Leet-Code puzzle {@link Problem_077__Combinations}
@@ -19,12 +18,14 @@ import static org.assertj.core.api.Assertions.in;
  */
 public class TestCase_077__Combinations {
 
-    final Problem_077__Combinations sln = Problem_077__Combinations.Solution.BITSET_ITER_SET_CLEAR_PAIR;
+    final Problem_077__Combinations sln =
+        Problem_077__Combinations.Solution.BITSET_ITER_SET_CLEAR_PAIR;
 
     @Test
     void test_ex_01() {
         assertThat(sln.combine(4, 2)).isEqualTo(List.of(
-            List.of(1, 2), List.of(1, 3), List.of(2, 3), List.of(2, 4), List.of(3, 4)
+            List.of(1, 2), List.of(1, 3), List.of(2, 3),
+            List.of(1, 4), List.of(2, 4), List.of(3, 4)
         ));
     }
 
