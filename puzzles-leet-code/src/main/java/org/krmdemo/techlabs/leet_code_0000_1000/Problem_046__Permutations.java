@@ -11,6 +11,15 @@ import java.util.stream.IntStream;
  * return all the possible permutations.
  * <hr/>
  * You can return the answer in any order.
+ * <h5>Constraints:</h5><pre>
+ *  1 <= nums.length <= 6
+ *  -10 <= nums[i] <= 10</pre>
+ * All the integers of nums are unique.
+ *
+ * @see <a href="https://docs.python.org/3/library/itertools.html#itertools.permutations">
+ *      <code>itertools.permutations</code>
+ *     </a>
+ * @see Problem_077__Combinations
  */
 public interface Problem_046__Permutations {
 

@@ -14,7 +14,7 @@ import java.util.*;
  * i + j < n</pre>
  * Return the <i>minimum number of jumps to reach</i> <code>nums[n - 1]</code>.
  * The test cases are generated such that you can reach <code>nums[n - 1]</code>.
- * <h4>Constraints:</h4><pre>
+ * <h5>Constraints:</h5><pre>
  *  1 <= nums.length <= 10^4
  *  0 <= nums[i] <= 1000
  *  it's guaranteed that you can reach nums[n - 1]

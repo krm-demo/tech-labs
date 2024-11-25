@@ -49,6 +49,15 @@ public class TestCase_031__Next_Permutation {
     }
 
     @Test
+    public void testCombo_01110() {
+        int[] numsArr = new int[] { 0, 1, 1, 1, 0 };
+        System.out.print(Arrays.toString(numsArr) + " --> ");
+        sln.nextPermutation(numsArr);
+        System.out.println(Arrays.toString(numsArr));
+        assertThat(numsArr).isEqualTo(new int[] { 1, 0, 0, 1, 1 });
+    }
+
+    @Test
     public void testComboTwo() {
         final int M = 3;
         final int K = 5;

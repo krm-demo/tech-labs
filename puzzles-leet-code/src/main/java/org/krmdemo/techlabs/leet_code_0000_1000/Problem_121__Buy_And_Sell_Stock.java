@@ -37,7 +37,7 @@ public interface Problem_121__Buy_And_Sell_Stock {
 
     enum Solution implements Problem_121__Buy_And_Sell_Stock {
         /**
-         * This approach is based on the second part Kadane's algorithm,
+         * This approach is based on the second part of Kadane's Algorithm,
          * when we are just looking for the maximum forward elevation
          */
         KADANE_MIN_SO_FAR {
@@ -56,7 +56,7 @@ public interface Problem_121__Buy_And_Sell_Stock {
             }
         },
         /**
-         * The same as Kadane's algorithm, but using Java-Streams instead of loops
+         * The same as above, but using Java-Streams instead of loops
          */
         WITH_PREV_MIN {
             @Override
