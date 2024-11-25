@@ -1,13 +1,17 @@
 package org.krmdemo.techlabs.leet_code_0000_1000;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.krmdemo.techlabs.utils.BitSetUtils;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.krmdemo.techlabs.leet_code_0000_1000.Problem_077__Combinations.Solution.toOneBasedList;
 
 /**
  * Test-Case for Leet-Code puzzle {@link Problem_077__Combinations}
@@ -18,25 +22,25 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class TestCase_077__Combinations {
 
-    final Problem_077__Combinations sln =
-        Problem_077__Combinations.Solution.BITSET_ITER_SET_CLEAR_PAIR;
-
-    @Test
-    void test_ex_01() {
-        assertThat(sln.combine(4, 2)).isEqualTo(List.of(
+    @EnumSource
+    @ParameterizedTest
+    void test_ex_01(Problem_077__Combinations.Solution sln) {
+        assertThat(sln.combine(4, 2)).contains(
             List.of(1, 2), List.of(1, 3), List.of(2, 3),
             List.of(1, 4), List.of(2, 4), List.of(3, 4)
-        ));
+        );
     }
 
-    @Test
-    void test_ex_02() {
-        assertThat(sln.combine(1, 1)).isEqualTo(List.of(List.of(1)));
+    @EnumSource
+    @ParameterizedTest
+    void test_ex_02(Problem_077__Combinations.Solution sln) {
+        assertThat(sln.combine(1, 1)).contains(List.of(1));
     }
 
-    @Test
-    void test_5_choose_3() {
-        assertThat(sln.combine(5, 3)).isEqualTo(List.of(
+    @EnumSource
+    @ParameterizedTest
+    void test_5_choose_3(Problem_077__Combinations.Solution sln) {
+        assertThat(sln.combine(5, 3)).contains(
             List.of(1, 2, 3),
             List.of(1, 2, 4),
             List.of(1, 3, 4),
@@ -47,7 +51,7 @@ public class TestCase_077__Combinations {
             List.of(1, 4, 5),
             List.of(2, 4, 5),
             List.of(3, 4, 5)
-        ));
+        );
     }
 
     /**
@@ -55,34 +59,42 @@ public class TestCase_077__Combinations {
      *     Example of counting combinations
      * </a>
      */
-    @Test
-    void test_52_choose_5() {
+    @EnumSource
+    @ParameterizedTest
+    void test_52_choose_5(Problem_077__Combinations.Solution sln) {
         List<List<Integer>> resultList = sln.combine(52, 5);
         assertThat(resultList.size()).isEqualTo(2_598_960);
         assertThat(resultList.getFirst()).isEqualTo(List.of(1, 2, 3, 4, 5));
         assertThat(resultList.getLast()).isEqualTo(List.of(48, 49, 50, 51, 52));
     }
 
+    // ------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------
+
     int N = 5;
     int K = 3;
 
     @Test
     void testBacktracking() {
+        System.out.printf("%n----- testBacktracking ( N = %d, K = %d ) ------%n", N, K);
         List<List<Integer>> ans = new ArrayList<>();
-        backtrack(new BitSet(), 0);
-        System.out.println("----------------");
+        backtrack(new BitSet(), 0, bitSet -> {
+            ans.add(toOneBasedList(bitSet));
+            System.out.printf("%3d) %s = %s = %s;%n",
+                ans.size(), bitSet, binaryHex(bitSet), BitSetUtils.toBigInt(bitSet));
+        });
         backtrack(new ArrayList<>(), 0);
     }
 
-    public void backtrack(BitSet curr, int firstBit) {
+    public void backtrack(BitSet curr, int firstBit, Consumer<BitSet> onNext) {
         if (curr.cardinality() == K) {
-            System.out.println(curr + " = " + binaryHex(curr) + " = " + BitSetUtils.toBigInt(curr));
+            onNext.accept(curr);
             return;
         }
         int lastBit = N - K + curr.cardinality();
         for (int bitIndex = firstBit; bitIndex <= lastBit; bitIndex++) {
             curr.set(bitIndex);
-            backtrack(curr, bitIndex + 1);
+            backtrack(curr, bitIndex + 1, onNext);
             curr.clear(bitIndex);
         }
     }
