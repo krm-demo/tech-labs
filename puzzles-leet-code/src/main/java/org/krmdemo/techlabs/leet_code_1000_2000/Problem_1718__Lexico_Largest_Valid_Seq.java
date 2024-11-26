@@ -21,7 +21,7 @@ package org.krmdemo.techlabs.leet_code_1000_2000;
  * For example, <code>[0,1,9,0]</code> is lexicographically larger than <code>[0,1,5,6]</code>
  * because the first position they differ is at the third number,
  * and <code>9</code> is greater than <code>5</code>.
- * <h4>Constraints:</h4>
+ * <h5>Constraints:</h5>
  * <code>1 <= n <= 20</code>
  */
 public interface Problem_1718__Lexico_Largest_Valid_Seq {

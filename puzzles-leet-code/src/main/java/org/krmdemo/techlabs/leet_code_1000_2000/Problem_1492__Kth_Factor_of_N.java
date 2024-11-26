@@ -15,7 +15,7 @@ import java.util.*;
  * Consider a list of all factors of <b><code>N</code></b> sorted in ascending order,
  * return the <b><code>K</code></b>th factor in this list or return <b><code>-1</code></b>
  * if <b><code>N</code></b> has less than <b><code>K</code></b> factors.
- * <h4>Constraints:</h4>
+ * <h5>Constraints:</h5>
  * <code>1 <= <b>K</b> <= <b>N</b> <= 1000</code>
  */
 public interface Problem_1492__Kth_Factor_of_N {

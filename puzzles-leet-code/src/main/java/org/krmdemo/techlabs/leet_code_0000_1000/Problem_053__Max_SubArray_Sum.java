@@ -8,10 +8,10 @@ import java.util.stream.IntStream;
 
 /**
  * <h3><a href="https://leetcode.com/problems/maximum-subarray/description/?envType=study-plan-v2&envId=top-interview-150">
- *     53. Maximum Subarray
+ *     53. Maximum Sub-Array
  * </a></h3>
  * Given an integer array <b><code>nums</code></b>, find the sub-array with the largest sum, and return its sum.
- * <h4>Constraints:</h4><pre>
+ * <h5>Constraints:</h5><pre>
  *      1 <= nums.length <= 10^5
  *  -10^4 <=   nums[i]   <= 10^4
  * </pre>
@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
  *     Kadane’s Algorithm — (Dynamic Programming) — How and Why Does it Work?
  * </a>
  */
-public interface Problem_053__Maximum_SubArray_Sum {
+public interface Problem_053__Max_SubArray_Sum {
 
     /**
      * Solution entry-point.
@@ -32,7 +32,7 @@ public interface Problem_053__Maximum_SubArray_Sum {
      */
     int maxSubArray(int[] nums);
 
-    enum Solution implements Problem_053__Maximum_SubArray_Sum {
+    enum Solution implements Problem_053__Max_SubArray_Sum {
         /**
          * This is a classic original implementation of
          * @see <a href="https://leetcodethehardway.com/tutorials/basic-topics/kadane">
@@ -42,18 +42,14 @@ public interface Problem_053__Maximum_SubArray_Sum {
         KADANE_CLASSIC {
             @Override
             public int maxSubArray(int[] nums) {
-                int sum = 0;
-                int maxSumDiff = Integer.MIN_VALUE;
+                int currSumPos = 0;
+                int maxCurrSum = nums[0];
                 for (int value : nums) {
-                    sum += value;
-                    maxSumDiff = Math.max(maxSumDiff, sum);
-                    if (sum < 0) {
-                        // resetting the cumulative sum - is the key mystery
-                        // of the original Kadane's algorithm
-                        sum = 0;
-                    }
+                    // reset the negative cumulative sum 'currSumPos' to zero
+                    currSumPos = Math.max(0, currSumPos) + value;
+                    maxCurrSum = Math.max(maxCurrSum, currSumPos);
                 }
-                return maxSumDiff;
+                return maxCurrSum;
             }
         },
         /**

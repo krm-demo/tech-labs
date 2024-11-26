@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
  * and each element in the array represents your maximum jump length at that position.
  * <hr/>
  * Return <code>true</code> if you can reach the last index, or <code>false</code> otherwise.
- * <h4>Constraints:</h4><pre>
+ * <h5>Constraints:</h5><pre>
  *  1 <= nums.length <= 10^4
  *  0 <= nums[i] <= 10^5</pre>
  * TODO: write test-case

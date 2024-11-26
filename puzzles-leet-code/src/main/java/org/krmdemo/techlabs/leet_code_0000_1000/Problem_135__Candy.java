@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
  *     <li>Children with a higher rating get more candies than their neighbors.</li>
  * </ul>
  * Return the minimum number of candies you need to have to distribute the candies to the children.
- * <h4>Constraints:</h4><pre>
+ * <h5>Constraints:</h5><pre>
  * n == ratings.length
  * 1 <= n <= 2 * 10^4
  * 0 <= ratings[i] <= 2 * 10^4

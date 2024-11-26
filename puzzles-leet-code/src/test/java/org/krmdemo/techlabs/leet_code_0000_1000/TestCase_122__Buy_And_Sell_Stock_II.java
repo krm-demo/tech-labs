@@ -7,7 +7,7 @@ import org.krmdemo.techlabs.utils.RandomHelper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Test-Case for Leet-Code puzzle {@link Problem_053__Maximum_SubArray_Sum}
+ * Test-Case for Leet-Code puzzle {@link Problem_053__Max_SubArray_Sum}
  *
  * @see org.krmdemo.techlabs.sandbox.WithPrevTest
  */

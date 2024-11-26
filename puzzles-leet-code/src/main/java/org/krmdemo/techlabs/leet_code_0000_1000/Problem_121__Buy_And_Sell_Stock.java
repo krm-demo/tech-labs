@@ -17,12 +17,12 @@ import java.util.stream.IntStream;
  * <hr/>
  * Return the maximum profit you can achieve from this transaction.
  * If you cannot achieve any profit, return <b><code>0</code></b>.
- * <h4>Constraints:</h4><pre>
+ * <h5>Constraints:</h5><pre>
  * 1 <= prices.length <= 10^5
  *    0 <= prices[i] <= 10^4
  * </pre>
  *
- * @see Problem_053__Maximum_SubArray_Sum
+ * @see Problem_053__Max_SubArray_Sum
  * @see Problem_122__Buy_And_Sell_Stock_II
  */
 public interface Problem_121__Buy_And_Sell_Stock {
