@@ -7,41 +7,37 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * <h3><a href="https://leetcode.com/problems/permutations/description/?envType=study-plan-v2&envId=top-interview-150">
- *     46. Permutations
+ * <h3><a href="https://leetcode.com/problems/permutations-ii/description/">
+ *     47. Permutations II
  * </a></h3>
- * Given an array <b><code>nums</code></b> of distinct integers,
- * return all the possible permutations.
+ * Given a collection of numbers, <b><code>nums</code></b>, that might contain <b>duplicates</b>,
+ * return all possible unique permutations in any order.
  * <hr/>
  * You can return the answer in any order.
  * <h5>Constraints:</h5><pre>
- *  1 <= nums.length <= 6
+ *  1 <= nums.length <= 8
  *  -10 <= nums[i] <= 10</pre>
- * All the integers of nums are unique.
  *
- * @see <a href="https://docs.python.org/3/library/itertools.html#itertools.permutations">
- *      <code>itertools.permutations</code>
- *     </a>
- * @see Problem_047__Permutations_II
- * @see Problem_077__Combinations
+ * @see Problem_046__Permutations
  */
-public interface Problem_046__Permutations {
+public interface Problem_047__Permutations_II {
 
     /**
      * Solution entry-point.
      *
-     * @param nums an array of distinct integers
+     * @param nums an array of integers with <b>duplicates</b>
      * @return the largest sum of sub-array
      */
-    List<List<Integer>> permute(int[] nums);
+    List<List<Integer>> permuteUnique(int[] nums);
 
-    enum Solution implements Problem_046__Permutations {
+    enum Solution implements Problem_047__Permutations_II {
         /**
          * Recursive (back-tracking) approach that is based on two queues
          */
         BACKTRACKING {
             @Override
-            public List<List<Integer>> permute(int[] nums) {
+            public List<List<Integer>> permuteUnique(int[] nums) {
+                // TODO: duplicates must be handled properly
                 List<List<Integer>> resultList = new ArrayList<>();
                 new BackTracking(nums, permutation -> {
                     resultList.add(permutation.toList());
@@ -80,7 +76,8 @@ public interface Problem_046__Permutations {
          */
         ITER_NEXT_PERM {
             @Override
-            public List<List<Integer>> permute(int[] nums) {
+            public List<List<Integer>> permuteUnique(int[] nums) {
+                // TODO: duplicates must be handled properly
                 List<List<Integer>> resultList = new ArrayList<>();
                 IndexesIterator iterIndexes = new IndexesIterator(nums.length);
                 do {
@@ -94,7 +91,8 @@ public interface Problem_046__Permutations {
          */
         STREAM_NEXT_PERM {
             @Override
-            public List<List<Integer>> permute(int[] nums) {
+            public List<List<Integer>> permuteUnique(int[] nums) {
+                // TODO: duplicates must be handled properly
                 return indexesStream(nums.length)
                     .map(indexes -> valuesList(nums, indexes))
                     .toList();
