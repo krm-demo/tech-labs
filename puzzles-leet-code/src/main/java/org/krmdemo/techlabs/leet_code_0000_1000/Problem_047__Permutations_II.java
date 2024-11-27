@@ -2,12 +2,12 @@ package org.krmdemo.techlabs.leet_code_0000_1000;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingInt;
 
 /**
@@ -58,7 +58,7 @@ public interface Problem_047__Permutations_II {
                     this.valuesArr = valuesArr;
                     current = new ArrayList<>();
                     countingMap = Arrays.stream(valuesArr).boxed().collect(
-                        Collectors.groupingBy(identity(), summingInt(v -> 1))
+                        groupingBy(identity(), summingInt(v -> 1))
                     );
                 }
                 @Override
@@ -96,7 +96,30 @@ public interface Problem_047__Permutations_II {
                 } while (iterValues.next() != null);
                 return resultList;
             }
+        },
+        /**
+         * Streaming approach that is based on the same {@link ValuesIterator}
+         */
+        STREAM_NEXT_PERM_UNIQUE {
+            @Override
+            public List<List<Integer>> permuteUnique(int[] nums) {
+                return valuesStream(nums)
+                    .map(Solution::toValueList)
+                    .toList();
+            }
         };
+
+        static List<Integer> toValueList(int[] valuesArr) {
+            return Arrays.stream(valuesArr).boxed().toList();
+        }
+
+        static Stream<int[]> valuesStream(int[] nums) {
+            ValuesIterator iterValues = new ValuesIterator(nums, false);
+            Spliterator<int[]> splitIterValues =
+                Spliterators.spliteratorUnknownSize(iterValues,
+                    Spliterator.NONNULL | Spliterator.IMMUTABLE | Spliterator.ORDERED);
+            return StreamSupport.stream(splitIterValues, false);
+        }
 
         static class ValuesIterator implements Iterator<int[]> {
             final int[] values;
@@ -111,11 +134,11 @@ public interface Problem_047__Permutations_II {
                 this.started = started;
             }
             public List<Integer> valuesList() {
-                return Arrays.stream(values).boxed().toList();
+                return toValueList(values);
             }
             @Override
             public boolean hasNext() {
-                return !started || compareArrays(values, valuesLast) < 0;
+                return !started || compareArrays(values, valuesLast) != 0;
             }
             @Override
             public int[] next() {
