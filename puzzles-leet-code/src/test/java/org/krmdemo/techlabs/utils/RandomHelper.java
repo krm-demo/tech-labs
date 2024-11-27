@@ -64,12 +64,4 @@ public class RandomHelper extends Random {
     public int[] randomDecreasingIntArr(long N, int lowBound, int highBound) {
         return reversedArr(randomIncreasingIntArr(N, lowBound, highBound));
     }
-
-    public int[] zeroIntArr(long N) {
-        return constantIntArr(N, 0);
-    }
-
-    public int[] constantIntArr(long N, int constant) {
-        return IntStream.generate(() -> constant).limit(N).toArray();
-    }
 }

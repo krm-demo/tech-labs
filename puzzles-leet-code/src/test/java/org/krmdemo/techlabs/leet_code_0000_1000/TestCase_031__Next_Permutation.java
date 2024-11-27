@@ -1,7 +1,6 @@
 package org.krmdemo.techlabs.leet_code_0000_1000;
 
 import org.junit.jupiter.api.Test;
-import org.krmdemo.techlabs.utils.RandomHelper;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -9,6 +8,7 @@ import java.util.stream.IntStream;
 import static java.util.stream.IntStream.rangeClosed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.krmdemo.techlabs.leet_code_0000_1000.Problem_031__Next_Permutation.dump;
+import static org.krmdemo.techlabs.utils.ArrayUtils.constantIntArr;
 import static org.krmdemo.techlabs.utils.NumberUtils.factorialInt;
 
 /**
@@ -17,8 +17,6 @@ import static org.krmdemo.techlabs.utils.NumberUtils.factorialInt;
 public class TestCase_031__Next_Permutation {
 
     private final Problem_031__Next_Permutation sln = Problem_031__Next_Permutation.Solution.DEFAULT;
-
-    private final RandomHelper rnd = new RandomHelper(-1);
 
     @Test
     public void test_ex_01() {
@@ -61,8 +59,8 @@ public class TestCase_031__Next_Permutation {
     public void testComboTwo() {
         final int M = 3;
         final int K = 5;
-        int[] numsArrM = rnd.constantIntArr(M, 0);
-        int[] numsArrN = rnd.constantIntArr(K, 1);
+        int[] numsArrM = constantIntArr(M, 0);
+        int[] numsArrN = constantIntArr(K, 1);
 
         final int N = M + K;
         int[] numsArr = IntStream.concat(Arrays.stream(numsArrM), Arrays.stream(numsArrN)).toArray();

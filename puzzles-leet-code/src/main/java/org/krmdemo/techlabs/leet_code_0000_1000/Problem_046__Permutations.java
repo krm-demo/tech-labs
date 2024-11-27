@@ -37,9 +37,47 @@ public interface Problem_046__Permutations {
 
     enum Solution implements Problem_046__Permutations {
         /**
+         * Recursive (back-tracking) approach that is based
+         * on a single list with current permutation.
+         */
+        BACKTRACKING_LIST {
+            @Override
+            public List<List<Integer>> permute(int[] nums) {
+                List<List<Integer>> resultList = new ArrayList<>();
+                new BackTracking(nums, permutation -> {
+                    resultList.add(permutation.toList());
+                }).run();
+                return resultList;
+            }
+            static class BackTracking implements Runnable {
+                final int[] valuesArr;
+                final List<Integer> current = new ArrayList<>();
+                final Consumer<Stream<Integer>> onNext;
+                BackTracking(int[] valuesArr, Consumer<Stream<Integer>> onNext) {
+                    this.valuesArr = valuesArr;
+                    this.onNext = onNext;
+                }
+                @Override
+                public void run() {
+                    if (current.size() == valuesArr.length) {
+                        onNext.accept(current.stream());
+                        return;
+                    }
+                    for (int value : valuesArr) {
+                        if (current.contains(value)) {
+                            continue;
+                        }
+                        current.addLast(value);
+                        run();
+                        current.removeLast();
+                    }
+                }
+            }
+        },
+        /**
          * Recursive (back-tracking) approach that is based on two queues
          */
-        BACKTRACKING {
+        BACKTRACKING_DEQUE {
             @Override
             public List<List<Integer>> permute(int[] nums) {
                 List<List<Integer>> resultList = new ArrayList<>();

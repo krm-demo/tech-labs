@@ -13,6 +13,10 @@ public class ArrayUtils {
         return IntStream.generate(() -> constant).limit(N).toArray();
     }
 
+    public static int[] concatArr(int[]... arrays) {
+        return Arrays.stream(arrays).flatMapToInt(Arrays::stream).toArray();
+    }
+
     public static int[] reversed(int[] arr) {
         if (arr == null || arr.length < 2) {
             return arr;
