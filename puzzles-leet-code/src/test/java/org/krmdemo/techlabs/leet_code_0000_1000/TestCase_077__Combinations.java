@@ -40,7 +40,8 @@ public class TestCase_077__Combinations {
     @EnumSource
     @ParameterizedTest
     void test_5_choose_3(Problem_077__Combinations.Solution sln) {
-        assertThat(sln.combine(5, 3)).contains(
+        List<List<Integer>> resultList = sln.combine(5, 3);
+        assertThat(resultList).hasSize(10).contains(
             List.of(1, 2, 3),
             List.of(1, 2, 4),
             List.of(1, 3, 4),
@@ -51,6 +52,24 @@ public class TestCase_077__Combinations {
             List.of(1, 4, 5),
             List.of(2, 4, 5),
             List.of(3, 4, 5)
+        );
+    }
+
+    @EnumSource
+    @ParameterizedTest
+    void test_5_choose_2(Problem_077__Combinations.Solution sln) {
+        List<List<Integer>> resultList = sln.combine(5, 2);
+        assertThat(resultList).hasSize(10).contains(
+            List.of(1, 2),
+            List.of(1, 3),
+            List.of(1, 4),
+            List.of(1, 5),
+            List.of(2, 3),
+            List.of(2, 4),
+            List.of(2, 5),
+            List.of(3, 4),
+            List.of(3, 5),
+            List.of(4, 5)
         );
     }
 

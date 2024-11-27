@@ -2,6 +2,9 @@ package org.krmdemo.techlabs.leet_code_0000_1000;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * <h3><a href="https://leetcode.com/problems/combinations/description/?envType=study-plan-v2&envId=top-interview-150">
@@ -102,41 +105,111 @@ public interface Problem_077__Combinations {
             @Override
             public List<List<Integer>> combine(int n, int k) {
                 List<List<Integer>> resultList = new ArrayList<>();
-                BitSet bitSet = new BitSet();
-                bitSet.set(0, k);
-                while (bitSet.length() <= n) {
-                    resultList.add(toOneBasedList(bitSet));
-                    nextCombination(bitSet);
-                }
+                BitSetIterator iterBitSet = new BitSetIterator(n, k);
+                do {
+                    resultList.add(iterBitSet.toOneBasedList());
+                } while (iterBitSet.next() != null);
                 return resultList;
             }
+        },
 
-            private static void nextCombination(BitSet bitSet) {
-                // TODO: following two 'while'-loops should be optimized
-                // looking for the first 'clear'/'set' consecutive pair of bits
-                int indexOfClearSet = bitSet.nextClearBit(0);
-                if (indexOfClearSet < bitSet.length()) {
-                    while (!bitSet.get(indexOfClearSet + 1)) {
-                        indexOfClearSet++;
-                    }
-                }
-                // looking for the first 'set'/'clear' consecutive pair of bits
-                int indexOfSetClear = bitSet.nextSetBit(0);
-                while (bitSet.get(indexOfSetClear + 1)) {
-                    indexOfSetClear++;
-                }
-                bitSet.set(indexOfSetClear + 1);
-                if (indexOfClearSet > indexOfSetClear) {
-                    // flip the pair 'set'/'clear'
-                    bitSet.clear(indexOfSetClear);
-                } else {
-                    // flip the 'set'-block and 'clear-block
-                    int lengthSet = indexOfSetClear - indexOfClearSet;
-                    bitSet.set(0, lengthSet - 1);
-                    bitSet.clear(lengthSet - 1, indexOfSetClear + 1);
-                }
+        /**
+         * The same iterative approach that is based on {@link BitSetIterator},
+         * whose iterative logic is based on {@link #nextCombination(BitSet)}
+         */
+        BITSET_STREAM {
+            @Override
+            public List<List<Integer>> combine(int n, int k) {
+                return bitSetStream(n, k)
+                    .limit(2_598_962)
+                    .map(Solution::toOneBasedList)
+                    .toList();
             }
         };
+
+        static Stream<BitSet> bitSetStream(int n, int k) {
+            BitSetIterator iterBitSet = new BitSetIterator(n, k, false);
+            Spliterator<BitSet> splitIterBitSet =
+                Spliterators.spliteratorUnknownSize(iterBitSet,
+                    Spliterator.NONNULL | Spliterator.IMMUTABLE | Spliterator.ORDERED);
+            return StreamSupport.stream(splitIterBitSet, false);
+        }
+
+        static class BitSetIterator implements Iterator<BitSet> {
+            final int N;
+            final int K;
+            final BitSet bitSet = new BitSet();
+            boolean started;
+            BitSetIterator(int n, int k) {
+                this(n, k, true);
+            }
+            BitSetIterator(int n, int k, boolean started) {
+                this.N = n;
+                this.K = k;
+                this.started = started;
+                this.bitSet.set(0, k);
+            }
+            public BitSet current() {
+                return bitSet;
+            }
+            public List<Integer> toOneBasedList() {
+                return Solution.toOneBasedList(current());
+            }
+            public boolean isLast() {
+                return IntStream.range(N - K, N).allMatch(bitSet::get);
+            }
+            @Override
+            public boolean hasNext() {
+                return !started || !isLast();
+            }
+            @Override
+            public BitSet next() {
+                if (!started) {
+                    started = true;
+                    return bitSet;
+                }
+                if (!hasNext()) {
+                    return null;
+                }
+                nextCombination(bitSet);
+                return bitSet;
+            }
+        }
+
+        /**
+         * Shift the 'set'-bits to the left from lower to higher
+         * and keep the number of 'set'-bits the same.
+         * <hr/>
+         * The lexicographic order of 'set'-bits' indexes is increased,
+         * but their sequence numbers are moving to the right on the integer axis
+         *
+         * @param bitSet an instance of {@link BitSet}, whose 'set'-bits are shifted left
+         */
+        private static void nextCombination(BitSet bitSet) {
+            // TODO: following two 'while'-loops should be optimized
+            // looking for the first 'clear'/'set' consecutive pair of bits
+            int indexOfClearSet = bitSet.nextClearBit(0);
+            if (indexOfClearSet < bitSet.length()) {
+                while (!bitSet.get(indexOfClearSet + 1)) {
+                    indexOfClearSet++;
+                }
+            }
+            // looking for the first 'set'/'clear' consecutive pair of bits
+            int indexOfSetClear = bitSet.nextSetBit(0);
+            while (bitSet.get(indexOfSetClear + 1)) {
+                indexOfSetClear++;
+            }
+            bitSet.set(indexOfSetClear + 1);
+            if (indexOfClearSet > indexOfSetClear) {
+                // flip the pair 'set'/'clear'
+                bitSet.clear(indexOfSetClear);
+            } else {
+                // flip the 'set'-block and 'clear-block
+                int lengthSet = indexOfSetClear - indexOfClearSet;
+                bitSet.set(0, lengthSet - 1);
+                bitSet.clear(lengthSet - 1, indexOfSetClear + 1);
+            }
+        }
 
         /**
          * Transform {@link BitSet} into one-based array of {@link Integer}
