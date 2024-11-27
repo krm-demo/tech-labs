@@ -154,7 +154,7 @@ public interface Problem_046__Permutations {
         }
 
         static class IndexesIterator implements Iterator<int[]> {
-            final int size;
+            final int size; // <-- looks like this field is redundant
             final int[] indexes;
             boolean started;
             IndexesIterator(int size) {
