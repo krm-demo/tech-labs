@@ -16,7 +16,7 @@ import static org.krmdemo.techlabs.utils.CumulativeUtils.*;
 public class CumulativeUtilsTest {
 
     @Test
-    public void testCumSumStream() {
+    void testCumSumStream() {
         assertThat(cumSum(1, 2, 3, 4, 5).boxed().toList()).isEqualTo(asList(0, 1, 3, 6, 10, 15));
         assertThat(cumSum(1, 1, 1, 1, 1).boxed().toList()).isEqualTo(asList(0, 1, 2, 3, 4, 5));
         assertThat(cumSum(0, 0, 0, 0, 0).boxed().toList()).isEqualTo(asList(0, 0, 0, 0, 0, 0));
@@ -24,7 +24,7 @@ public class CumulativeUtilsTest {
     }
 
     @Test
-    public void testCumSumList() {
+    void testCumSumList() {
         assertThat(cumSumList(1, 2, 3, 4, 5)).isEqualTo(asList(0, 1, 3, 6, 10, 15));
         assertThat(cumSumList(1, 1, 1, 1, 1)).isEqualTo(asList(0, 1, 2, 3, 4, 5));
         assertThat(cumSumList(0, 0, 0, 0, 0)).isEqualTo(asList(0, 0, 0, 0, 0, 0));
@@ -32,7 +32,7 @@ public class CumulativeUtilsTest {
     }
 
     @Test
-    public void testCumSumNoLeadingZero() {
+    void testCumSumNoLeadingZero() {
         assertThat(cumSumList(asList(1, 2, 3, 4, 5), false)).isEqualTo(asList(1, 3, 6, 10, 15));
         assertThat(cumSumList(asList(1, 1, 1, 1, 1), false)).isEqualTo(asList(1, 2, 3, 4, 5));
         assertThat(cumSumList(asList(0, 0, 0, 0, 0), false)).isEqualTo(asList(0, 0, 0, 0, 0));
@@ -40,7 +40,7 @@ public class CumulativeUtilsTest {
     }
 
     @Test
-    public void testCumSumDeque() {
+    void testCumSumDeque() {
         assertThat(cumSumDeque(1, 2, 3, 4, 5)).isEqualTo(asList(0, 1, 3, 6, 10, 15));
         assertThat(cumSumDeque(1, 1, 1, 1, 1)).isEqualTo(asList(0, 1, 2, 3, 4, 5));
         assertThat(cumSumDeque(0, 0, 0, 0, 0)).isEqualTo(asList(0, 0, 0, 0, 0, 0));
@@ -53,13 +53,13 @@ public class CumulativeUtilsTest {
     }
 
     @Test
-    public void testCumMinMaxSingle() {
+    void testCumMinMaxSingle() {
         assertThat(cumMinBefore(0, -1).boxed().toList()).isEqualTo(List.of(0, -1));
         assertThat(cumMaxBefore(0, -1).boxed().toList()).isEqualTo(List.of(0, 0));
     }
 
     @Test
-    public void testCumMinMaxBefore() {
+    void testCumMinMaxBefore() {
         assertThat(cumMinBefore(19, 44, 33, 54, 54, 77, 63, 34, 63, 17, 10, 7, 12, 3, 89).boxed().toList())
             .isEqualTo(asList(19, 19, 19, 19, 19, 19, 19, 19, 19, 17, 10, 7, 7, 3, 3));
         assertThat(cumMaxBefore(19, 44, 33, 54, 54, 77, 63, 34, 63, 17, 10, 7, 12, 3, 89).boxed().toList())
@@ -67,7 +67,7 @@ public class CumulativeUtilsTest {
     }
 
     @Test
-    public void testCumMinMaxBeforeList() {
+    void testCumMinMaxBeforeList() {
         assertThat(cumMinBeforeList(19, 44, 33, 54, 54, 77, 63, 34, 63, 17, 10, 7, 12, 3, 89))
             .isEqualTo(asList(19, 19, 19, 19, 19, 19, 19, 19, 19, 17, 10, 7, 7, 3, 3));
         assertThat(cumMaxBeforeList(19, 44, 33, 54, 54, 77, 63, 34, 63, 17, 10, 7, 12, 3, 89))
@@ -75,7 +75,7 @@ public class CumulativeUtilsTest {
     }
 
     @Test
-    public void testCumMinMaxAfter() {
+    void testCumMinMaxAfter() {
         assertThat(cumMinAfter(41, 46, 25, 57, 8, 48, 96, 52, 49, 73, 95, 54, 27, 44, 68).boxed().toList())
             .isEqualTo(asList(8, 8, 8, 8, 8, 27, 27, 27, 27, 27, 27, 27, 27, 44, 68));
         assertThat(cumMinAfter(asList(41, 46, 25, 57, 8, 48, 96, 52, 49, 73, 95, 54, 27, 44, 68)).toList())
@@ -92,7 +92,7 @@ public class CumulativeUtilsTest {
     }
 
     @Test
-    public void testJoiningReversed() {
+    void testJoiningReversed() {
         // TODO: publish following stuff somewhere here https://stackoverflow.com/a/62862901/3738497
         final int N = 10;
         System.out.printf("collecting the sequential stream over the range [ 1, %d ]:%n", N);

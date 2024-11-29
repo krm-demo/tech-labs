@@ -17,19 +17,19 @@ public class TestCase_121__Buy_And_Sell_Stock {
 
     @EnumSource
     @ParameterizedTest
-    public void test_ex_01(Problem_121__Buy_And_Sell_Stock.Solution sln) {
+    void test_ex_01(Problem_121__Buy_And_Sell_Stock.Solution sln) {
         assertThat(sln.maxProfit(new int[] { 7,1,5,3,6,4 })).isEqualTo(5);
     }
 
     @EnumSource
     @ParameterizedTest
-    public void test_ex_02(Problem_121__Buy_And_Sell_Stock.Solution sln) {
+    void test_ex_02(Problem_121__Buy_And_Sell_Stock.Solution sln) {
         assertThat(sln.maxProfit(new int[] { 7,6,4,3,1 })).isEqualTo(0);
     }
 
     @EnumSource
     @ParameterizedTest
-    public void test_rnd25(Problem_121__Buy_And_Sell_Stock.Solution sln) {
+    void test_rnd25(Problem_121__Buy_And_Sell_Stock.Solution sln) {
         int[] prices25 = rnd.randomRangeArr(1, 25);
         assertThat(sln.maxProfit(prices25)).isEqualTo(21);
     }

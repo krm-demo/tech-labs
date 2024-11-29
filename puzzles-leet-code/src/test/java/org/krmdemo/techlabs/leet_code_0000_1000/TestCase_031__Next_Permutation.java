@@ -19,35 +19,35 @@ public class TestCase_031__Next_Permutation {
     private final Problem_031__Next_Permutation sln = Problem_031__Next_Permutation.Solution.DEFAULT;
 
     @Test
-    public void test_ex_01() {
+    void test_ex_01() {
         int[] numsArr = new int[] { 1, 2, 3 };
         sln.nextPermutation(numsArr);
         assertThat(numsArr).isEqualTo(new int[] { 1, 3, 2 });
     }
 
     @Test
-    public void test_ex_02() {
+    void test_ex_02() {
         int[] numsArr = new int[] { 3, 2, 1 };
         sln.nextPermutation(numsArr);
         assertThat(numsArr).isEqualTo(new int[] { 1, 2, 3 });
     }
 
     @Test
-    public void test_ex_03() {
+    void test_ex_03() {
         int[] numsArr = new int[] { 1, 1, 5 };
         sln.nextPermutation(numsArr);
         assertThat(numsArr).isEqualTo(new int[] { 1, 5, 1 });
     }
 
     @Test
-    public void testDuplicates() {
+    void testDuplicates() {
         int[] numsArr = new int[] { 5, 1, 1 };
         sln.nextPermutation(numsArr);
         assertThat(numsArr).isEqualTo(new int[] { 1, 1, 5 });
     }
 
     @Test
-    public void testCombo_01110() {
+    void testCombo_01110() {
         int[] numsArr = new int[] { 0, 1, 1, 1, 0 };
         System.out.print(Arrays.toString(numsArr) + " --> ");
         sln.nextPermutation(numsArr);
@@ -56,7 +56,7 @@ public class TestCase_031__Next_Permutation {
     }
 
     @Test
-    public void testComboTwo() {
+    void testComboTwo() {
         final int M = 3;
         final int K = 5;
         int[] numsArrM = constantIntArr(M, 0);
@@ -99,7 +99,7 @@ public class TestCase_031__Next_Permutation {
     }
 
     @Test
-    public void testAscCycle5() {
+    void testAscCycle5() {
         final int N = 5;
         System.out.printf("%n==== testAscCycle(N = %d): ====%n", N);
         int[] numsArr = rangeClosed(1, N).toArray();
@@ -134,7 +134,7 @@ public class TestCase_031__Next_Permutation {
     }
 
     @Test
-    public void testAscCycle3() {
+    void testAscCycle3() {
         final int N = 3;
         System.out.printf("%n==== testAscCycle(N = %d): ====%n", N);
         int[] numsArr = rangeClosed(7, 9).toArray();

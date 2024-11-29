@@ -21,14 +21,14 @@ public class MatrixUtilsTest {
     private final MatrixUtils.M2 P_inv = matrix2(8, -5, -3, 2);
 
     @Test
-    public void testDet() {
+    void testDet() {
         assertThat(det(P)).isEqualTo(BigInteger.ONE);
         assertThat(det(P_inv)).isEqualTo(BigInteger.ONE);
         assertThat(mult(P, P_inv)).isEqualTo(M2_EYE);
     }
 
     @Test
-    public void testPowBin() {
+    void testPowBin() {
         final int N = 7;
         System.out.println("---- pow(P, i): ----");
         for (int i = 0; i < N; i++) {

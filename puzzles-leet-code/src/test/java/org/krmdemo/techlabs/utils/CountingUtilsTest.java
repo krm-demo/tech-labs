@@ -14,13 +14,13 @@ import static org.krmdemo.techlabs.utils.CountingUtils.splitWordsList;
 public class CountingUtilsTest {
 
     @Test
-    public void testStringSplit() {
+    void testStringSplit() {
         assertThat(splitWordsList("asa;sas asa\tsas asa  sas"))
             .isEqualTo(asList("asa", "sas", "asa", "sas", "asa", "sas"));
     }
 
     @Test
-    public void testDisjointSet() {
+    void testDisjointSet() {
         List<String> wordsA = List.of("a", "b", "cde", "la-la-la");
         List<String> wordsB = List.of("1", "2", "cde", "la-la-la");
         Set<String> uniqueA = new HashSet<>(wordsA);
