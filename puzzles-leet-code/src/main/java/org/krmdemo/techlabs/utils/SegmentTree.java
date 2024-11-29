@@ -83,12 +83,12 @@ public interface SegmentTree {
             private Node root = null;
 
             Node rootNode(int value) {
-                int highBitValue = Integer.highestOneBit(value);
-                if (rootValue > highBitValue) {
-                    return root;
-                } else if (root == null) {
+                if (root == null) {
                     root = new Node();
                     rootValue = 2;  // the same as "1 << 1"
+                }
+                int highBitValue = Integer.highestOneBit(value);
+                if (rootValue > highBitValue) {
                     return root;
                 }
                 Node newRoot = root.newParent();
@@ -105,6 +105,10 @@ public interface SegmentTree {
 
             @Override
             public void updateCount(int value, int count) {
+                if (value < 0) {
+                    throw new IllegalArgumentException(
+                        "value must NOT be negative: " + value);
+                }
                 Node node = rootNode(value);
                 node.count += count;
                 int bitValue = rootValue;
@@ -126,7 +130,6 @@ public interface SegmentTree {
                 }
                 Node node = root;
                 int bitValue = rootValue;
-//                int lowBitValue = Integer.lowestOneBit(value);
                 while (bitValue > 1 && node != null) {
                     bitValue >>= 1;
                     if ((bitValue & value) == 0) {
@@ -146,7 +149,6 @@ public interface SegmentTree {
                 Node node = root;
                 int totalCount = 0;
                 int bitValue = rootValue;
-//                int lowBitValue = Integer.lowestOneBit(value);
                 while (bitValue > 1 && node != null) {
                     bitValue >>= 1;
                     if ((bitValue & value) == 0) {

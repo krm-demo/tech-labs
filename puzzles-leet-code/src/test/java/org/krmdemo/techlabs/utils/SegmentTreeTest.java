@@ -6,8 +6,14 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
+/**
+ * Unit-Test to verify the implementation of {@link SegmentTree}
+ */
 public class SegmentTreeTest {
+
+    RandomHelper rnd = new RandomHelper(-101010);
 
     @Test
     void testManual() {
@@ -38,5 +44,38 @@ public class SegmentTreeTest {
             12, 12, 13, 13, 13, 14, 14, 14, 15, 15,
             15, 15, 15, 15, 15
         ));
+    }
+
+    @Test
+    void testRandom() {
+        final int N = 10_000;
+        final int low = 123;
+        final int high = 456;
+        int[] nums = rnd.ints(N, low, high).toArray();
+        SegmentTree st = SegmentTree.create();
+        Arrays.stream(nums).forEach(st::incrementCount);
+        for (int i = low-10; i < high+10; i++) {
+            final int value = i;
+            long count = Arrays.stream(nums).filter(v -> v == value).count();
+            assertThat(st.count(value))
+                .describedAs("st.count(%d) = %d <> %d", value, st.count(value), count)
+                .isEqualTo(count);
+            long countLess = Arrays.stream(nums).filter(v -> v < value).count();
+            assertThat(st.countLess(value))
+                .describedAs("st.countLess(%d) = %d <> %d", value, st.countLess(value), countLess)
+                .isEqualTo(countLess);
+        }
+    }
+
+    @Test
+    void testNegativeValues() {
+        SegmentTree st = SegmentTree.create();
+        assertThatIllegalArgumentException().isThrownBy(
+            () -> st.updateCount(-123, -345)
+        );
+        st.updateCount(123, -345);
+        assertThat(st.count(123)).isEqualTo(-345);
+        assertThat(st.countLess(123)).isEqualTo(0);
+        assertThat(st.countLess(124)).isEqualTo(-345);
     }
 }
