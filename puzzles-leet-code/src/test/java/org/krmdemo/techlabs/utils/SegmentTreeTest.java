@@ -22,7 +22,10 @@ public class SegmentTreeTest {
     void testManual_Tree(SegmentTree.Factories segmentTreeFactory) {
         final int N = 32;
         SegmentTree st = segmentTreeFactory.create(N);
+        assertThat(st.firstValue()).isNull();
+        assertThat(st.lastValue()).isNull();
         IntStream.range(0, 10).map(i -> i * 3).forEach(st::incrementCount);
+        assertThat(st.lastValue()).isEqualTo(27);
         st.incrementCount(0);
         st.incrementCount(1);
         st.incrementCount(2);
@@ -32,6 +35,7 @@ public class SegmentTreeTest {
         st.incrementCount(4);
         st.incrementCount(8);
         st.incrementCount(19);
+        assertThat(st.lastValue()).isEqualTo(27);
         st.incrementCount(29);
         st.incrementCount(31);
         System.out.println(st);
@@ -86,5 +90,15 @@ public class SegmentTreeTest {
         assertThat(st.count(123)).isEqualTo(-345);
         assertThat(st.countLess(123)).isEqualTo(0);
         assertThat(st.countLess(124)).isEqualTo(-345);
+        assertThat(st.firstValue()).isEqualTo(123);
+        assertThat(st.lastValue()).isEqualTo(123);
+    }
+
+    @Test
+    void testExceedCapacity() {
+        SegmentTree st = SegmentTree.createArray();
+        assertThatIllegalArgumentException().isThrownBy(
+            () -> st.decrementCount(1234)
+        ).withMessageContaining("value must be less than 32, but it equals to 1234");
     }
 }

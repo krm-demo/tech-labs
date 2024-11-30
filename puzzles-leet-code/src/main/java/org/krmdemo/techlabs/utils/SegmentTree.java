@@ -2,31 +2,84 @@ package org.krmdemo.techlabs.utils;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
+/**
+ * An interface to counting segment-tree, which allows to count the values
+ * within any contiguous range in logarithmic time (unlike square complexity
+ * of a brute-force approach that does not require additional space though)
+ */
 public interface SegmentTree {
 
+    /**
+     * Updating the counter of a given value
+     * @param value the value whose counter to update
+     * @param count the count to add to existing counter (initial zero is implied)
+     */
     void updateCount(int value, int count);
 
+    /**
+     * Incrementing the counter of a given value by one
+     * @param value the value whose counter to increment
+     */
     default void incrementCount(int value) {
         updateCount(value, 1);
     }
 
+    /**
+     * Decrementing the counter of a given value by one
+     * @param value the value whose counter to decrement
+     */
     default void decrementCount(int value) {
-        updateCount(value, 1);
+        updateCount(value, -1);
     }
 
+    /**
+     * Return the counter of a given value
+     * <hr/>
+     * (the same as {@link CountingUtils#countingMap(Stream) counting-map} does)
+     *
+     * @param value the value whose counter to return
+     * @return the counter of a given value (or zero if a value never was {@link #updateCount(int, int)} updated
+     */
     int count(int value);
 
+    /**
+     * Return the sum of counters of all values that are less than the given one
+     *
+     * @param value the ceil-value of counters to summarize
+     * @return the sum of counters of all values that are less than the given one
+     */
     int countLess(int value);
 
+    /**
+     * @return minimal value who counter was ever {@link #updateCount(int, int) updated}
+     */
+    Integer firstValue();
+
+    /**
+     * @return maximal value who counter was ever {@link #updateCount(int, int) updated}
+     */
+    Integer lastValue();
+
+    /**
+     * @return an instance of a binary-tree implementation of {@link SegmentTree}
+     */
     static SegmentTree createTree() {
         return Factories.DEFAULT.get();
     }
 
+    /**
+     * @return an instance of a segment-array implementation of {@link SegmentTree}
+     */
     static SegmentTree createArray() {
         return Factories.ARRAY.create();
     }
 
+    /**
+     * @param maxValue maximum capacity (exclusive) of a segment-array
+     * @return an instance of a segment-array implementation of {@link SegmentTree}
+     */
     static SegmentTree createArray(int maxValue) {
         return Factories.ARRAY.create(maxValue);
     }
@@ -43,12 +96,18 @@ public interface SegmentTree {
     }
 
     enum Factories implements Factory {
+        /**
+         * A factory to instantiate a binary-tree implementation of {@link SegmentTree}
+         */
         DEFAULT {
             @Override
             public SegmentTree create() {
                 return new SegmentTreeImpl();
             }
         },
+        /**
+         * A factory to instantiate a segment-array implementation of {@link SegmentTree}
+         */
         ARRAY {
             public static final int DEFAULT_MAX_VALUE = 10 << 1;
             @Override
@@ -61,7 +120,27 @@ public interface SegmentTree {
             }
         };
 
-        private static class SegmentTreeImpl implements SegmentTree {
+        private static class MinMaxHolder {
+            private Integer firstValue = null;
+            private Integer lastValue = null;
+
+            void updateMinMax(int value) {
+                firstValue = firstValue == null ? value : Math.min(firstValue, value);
+                lastValue = lastValue == null ? value : Math.max(lastValue, value);
+            }
+
+            public Integer firstValue() {
+                return this.firstValue;
+            }
+            public Integer lastValue() {
+                return this.lastValue;
+            }
+        }
+
+        /**
+         * Implementation of {@link SegmentTree} that is based on binary segment-tree
+         */
+        private static class SegmentTreeImpl extends MinMaxHolder implements SegmentTree {
             static class Node {
                 int count = 0;
                 Node high = null;
@@ -140,6 +219,7 @@ public interface SegmentTree {
                     throw new IllegalArgumentException(
                         "value must NOT be negative: " + value);
                 }
+                updateMinMax(value);
                 Node node = rootNode(value);
                 node.count += count;
                 int bitValue = rootValue;
@@ -198,7 +278,10 @@ public interface SegmentTree {
             }
         }
 
-        private static class SegmentArray implements SegmentTree {
+        /**
+         * Implementation of {@link SegmentTree} that is based on segment-array
+         */
+        private static class SegmentArray extends MinMaxHolder implements SegmentTree {
 
             private final int rootValue;
             private final int[] countArr;
@@ -216,6 +299,7 @@ public interface SegmentTree {
             @Override
             public void updateCount(int value, int count) {
                 int index = checkIndex(value);
+                updateMinMax(value);
                 while (index > 0) {
                     countArr[index] += count;
                     index = index >> 1;
