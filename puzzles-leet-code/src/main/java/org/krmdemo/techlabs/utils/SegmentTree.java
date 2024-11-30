@@ -1,5 +1,6 @@
 package org.krmdemo.techlabs.utils;
 
+import java.util.*;
 import java.util.function.Supplier;
 
 public interface SegmentTree {
@@ -18,17 +19,47 @@ public interface SegmentTree {
 
     int countLess(int value);
 
-    static SegmentTree create() {
-        return Factory.DEFAULT.get();
+    static SegmentTree createTree() {
+        return Factories.DEFAULT.get();
     }
 
-    enum Factory implements Supplier<SegmentTree> {
-        DEFAULT;
+    static SegmentTree createArray() {
+        return Factories.ARRAY.create();
+    }
 
-        @Override
-        public SegmentTree get() {
-            return new SegmentTreeImpl();
+    static SegmentTree createArray(int maxValue) {
+        return Factories.ARRAY.create(maxValue);
+    }
+
+    interface Factory extends Supplier<SegmentTree> {
+        SegmentTree create();
+        default SegmentTree create(int maxValue) {
+            return create();
         }
+        @Override
+        default SegmentTree get() {
+            return create();
+        }
+    }
+
+    enum Factories implements Factory {
+        DEFAULT {
+            @Override
+            public SegmentTree create() {
+                return new SegmentTreeImpl();
+            }
+        },
+        ARRAY {
+            public static final int DEFAULT_MAX_VALUE = 10 << 1;
+            @Override
+            public SegmentTree create() {
+                return create(DEFAULT_MAX_VALUE);
+            }
+            @Override
+            public SegmentTree create(int maxValue) {
+                return new SegmentArray(maxValue);
+            }
+        };
 
         private static class SegmentTreeImpl implements SegmentTree {
             static class Node {
@@ -147,23 +178,95 @@ public interface SegmentTree {
                     return root.count;
                 }
                 Node node = root;
-                int totalCount = 0;
+                int totalCountLess = 0;
                 int bitValue = rootValue;
                 while (bitValue > 1 && node != null) {
                     bitValue >>= 1;
                     if ((bitValue & value) == 0) {
                         node = node.low;
                     } else {
-                        totalCount += node.low == null ? 0 : node.low.count;
+                        totalCountLess += node.low == null ? 0 : node.low.count;
                         node = node.high;
                     }
                 }
-                return totalCount;
+                return totalCountLess;
             }
 
             @Override
             public String toString() {
                 return root == null ? "<< null >>" : root.dump(0, rootValue);
+            }
+        }
+
+        private static class SegmentArray implements SegmentTree {
+
+            private final int rootValue;
+            private final int[] countArr;
+
+            SegmentArray(int maxValue) {
+                if (maxValue <= 0) {
+                    throw new IllegalArgumentException(
+                        "maxValue must be positive: " + maxValue);
+                }
+                maxValue--;
+                rootValue = Integer.highestOneBit(maxValue << 1) << 1;
+                countArr = new int[rootValue];
+            }
+
+            @Override
+            public void updateCount(int value, int count) {
+                int index = checkIndex(value);
+                while (index > 0) {
+                    countArr[index] += count;
+                    index = index >> 1;
+                }
+            }
+
+            @Override
+            public int count(int value) {
+                int index = checkIndex(value);
+                return countArr[index];
+            }
+
+            @Override
+            public int countLess(int value) {
+                int totalCountLess = 0;
+                int index = checkIndex(value);
+                while (index > 0) {
+                    int parent = index >> 1;
+                    if ((index & 1) == 1) {
+                        int countLess = countArr[parent << 1];
+                        totalCountLess += countLess;
+                    }
+                    index = parent;
+                }
+                return totalCountLess;
+            }
+
+            private int checkIndex(int value) {
+                if (value < 0) {
+                    throw new IllegalArgumentException(
+                        "value must NOT be negative: " + value);
+                }
+                int index = value + (rootValue >> 1);
+                if (index >= rootValue) {
+                    throw new IllegalArgumentException(String.format(
+                        "value must be less than %d, but it equals to %d",
+                        rootValue >> 1, value));
+                }
+                return index;
+            }
+
+            @Override
+            public String toString() {
+                StringBuilder sb = new StringBuilder();
+                for (int level = 1; level <= Integer.numberOfTrailingZeros(rootValue); level++) {
+                    int start = 1 << (level - 1);
+                    int end = start << 1;
+                    List<Integer> levelList = Arrays.stream(countArr, start, end).boxed().toList();
+                    sb.append(String.format("%2d :: %s %n", level, levelList));
+                }
+                return sb.toString();
             }
         }
     }
