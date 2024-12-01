@@ -1,6 +1,5 @@
 package org.krmdemo.techlabs.utils;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -94,11 +93,12 @@ public class SegmentTreeTest {
         assertThat(st.lastValue()).isEqualTo(123);
     }
 
-    @Test
-    void testExceedCapacity() {
-        SegmentTree st = SegmentTree.createArray();
+    @ParameterizedTest
+    @EnumSource(names = {"FENWICK_ARRAY","SEGMENT_ARRAY"})  // <-- binary segment-tree does not have capacity
+    void testExceedCapacity(SegmentTree.Factories segmentTreeFactory) {
+        SegmentTree st = segmentTreeFactory.create();
         assertThatIllegalArgumentException().isThrownBy(
             () -> st.decrementCount(1234)
-        ).withMessageContaining("value must be less than 32, but it equals to 1234");
+        ).withMessageMatching("value must be less than \\d+, but it equals to 1234");
     }
 }

@@ -2,6 +2,7 @@ package org.krmdemo.techlabs.utils;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -66,22 +67,37 @@ public interface SegmentTree {
      * @return an instance of a binary-tree implementation of {@link SegmentTree}
      */
     static SegmentTree createTree() {
-        return Factories.DEFAULT.get();
+        return Factories.SEGMENT_TREE.get();
     }
 
     /**
      * @return an instance of a segment-array implementation of {@link SegmentTree}
      */
-    static SegmentTree createArray() {
-        return Factories.ARRAY.create();
+    static SegmentTree createSegmentArray() {
+        return Factories.SEGMENT_ARRAY.create();
     }
 
     /**
-     * @param maxValue maximum capacity (exclusive) of a segment-array
+     * @param capacity maximum capacity (exclusive) of a segment-array
      * @return an instance of a segment-array implementation of {@link SegmentTree}
      */
-    static SegmentTree createArray(int maxValue) {
-        return Factories.ARRAY.create(maxValue);
+    static SegmentTree createSegmentArray(int capacity) {
+        return Factories.SEGMENT_ARRAY.create(capacity);
+    }
+
+    /**
+     * @return an instance of a fenwick-array implementation of {@link SegmentTree}
+     */
+    static SegmentTree createFenwickArray() {
+        return Factories.FENWICK_ARRAY.create();
+    }
+
+    /**
+     * @param capacity maximum capacity (exclusive) of a segment-array
+     * @return an instance of a fenwick-array implementation of {@link SegmentTree}
+     */
+    static SegmentTree createFenwickArray(int capacity) {
+        return Factories.FENWICK_ARRAY.create(capacity);
     }
 
     interface Factory extends Supplier<SegmentTree> {
@@ -99,7 +115,7 @@ public interface SegmentTree {
         /**
          * A factory to instantiate a binary-tree implementation of {@link SegmentTree}
          */
-        DEFAULT {
+        SEGMENT_TREE {
             @Override
             public SegmentTree create() {
                 return new SegmentTreeImpl();
@@ -108,7 +124,7 @@ public interface SegmentTree {
         /**
          * A factory to instantiate a segment-array implementation of {@link SegmentTree}
          */
-        ARRAY {
+        SEGMENT_ARRAY {
             public static final int DEFAULT_MAX_VALUE = 10 << 1;
             @Override
             public SegmentTree create() {
@@ -117,6 +133,22 @@ public interface SegmentTree {
             @Override
             public SegmentTree create(int maxValue) {
                 return new SegmentArray(maxValue);
+            }
+        },
+        /**
+         * A factory to instantiate a fenwick-array implementation of {@link SegmentTree}
+         */
+        FENWICK_ARRAY {
+            public static final int DEFAULT_MAX_VALUE = 10 << 1;
+
+            @Override
+            public SegmentTree create() {
+                return create(DEFAULT_MAX_VALUE);
+            }
+
+            @Override
+            public SegmentTree create(int maxValue) {
+                return new FenwickTree(maxValue);
             }
         };
 
@@ -279,20 +311,25 @@ public interface SegmentTree {
         }
 
         /**
-         * Implementation of {@link SegmentTree} that is based on segment-array
+         * Implementation of {@link SegmentTree} that is based on segment-array.
+         *
+         * @see <a href="https://en.wikipedia.org/wiki/Segment_tree">(wiki) Segment tree</a>
+         * @see <a href="https://www.geeksforgeeks.org/segment-tree-data-structure/">
+         *     (GFG) Segment Tree
+         * </a>
          */
         private static class SegmentArray extends MinMaxHolder implements SegmentTree {
 
             private final int rootValue;
             private final int[] countArr;
 
-            SegmentArray(int maxValue) {
-                if (maxValue <= 0) {
+            SegmentArray(int capacity) {
+                if (capacity <= 0) {
                     throw new IllegalArgumentException(
-                        "maxValue must be positive: " + maxValue);
+                        "capacity must be positive: " + capacity);
                 }
-                maxValue--;
-                rootValue = Integer.highestOneBit(maxValue << 1) << 1;
+                capacity--;
+                rootValue = Integer.highestOneBit(capacity << 1) << 1;
                 countArr = new int[rootValue];
             }
 
@@ -351,6 +388,115 @@ public interface SegmentTree {
                     sb.append(String.format("%2d :: %s %n", level, levelList));
                 }
                 return sb.toString();
+            }
+        }
+
+        /**
+         * Implementation of {@link SegmentTree} that is based on
+         * <a href="https://en.wikipedia.org/wiki/Fenwick_tree">Fenwick Tree</a>
+         *
+         * @see <a href="https://www.geeksforgeeks.org/binary-indexed-tree-or-fenwick-tree-2/">
+         *     Binary Indexed Tree or Fenwick Tree
+         * </a>
+         */
+        private static class FenwickTree extends MinMaxHolder implements SegmentTree {
+
+            private final int[] fenwickArr;
+
+            FenwickTree(int capacity) {
+                if (capacity <= 0) {
+                    throw new IllegalArgumentException(
+                        "capacity must be positive: " + capacity);
+                }
+                capacity += 1;
+                fenwickArr = new int[capacity];
+            }
+
+            @Override
+            public void updateCount(int value, int count) {
+                checkIndex(value);
+                updateMinMax(value);
+                int index = value + 1;
+                while (index < fenwickArr.length) {
+                    fenwickArr[index] += count;
+                    index += index & (-index);  // <-- least significant set bit
+                }
+            }
+
+            @Override
+            public int count(int value) {
+                return countNotMore(value) - countLess(value);
+            }
+
+            @Override
+            public int countLess(int value) {
+                return value == 0 ? 0 : countNotMore(value - 1);
+            }
+
+            public int countNotMore(int value) {
+                checkIndex(value);
+                int index = value + 1;
+                int totalCountLess = 0;
+                while (index > 0) {
+                    totalCountLess += fenwickArr[index];
+                    index -= index & (-index);  // <-- least significant set bit
+                }
+                return totalCountLess;
+            }
+
+            private void checkIndex(int value) {
+                if (value < 0) {
+                    throw new IllegalArgumentException(
+                        "value must NOT be negative: " + value);
+                }
+                if (value >= fenwickArr.length - 1) {
+                    throw new IllegalArgumentException(String.format(
+                        "value must be less than %d, but it equals to %d",
+                        fenwickArr.length, value));
+                }
+            }
+
+            @Override
+            public String toString() {
+                class FenwickNode {
+                    final int value;
+                    final int count;
+                    final Map<Integer,FenwickNode> children =
+                        new TreeMap<>(Comparator.reverseOrder());
+                    FenwickNode parent = null;
+                    FenwickNode(int value, int count) {
+                        this.value = value;
+                        this.count = count;
+                    }
+                    String dump() {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(String.format("%2d :: %d %n", value, count));
+                        children.forEach((index, node) ->
+                            sb.append(node.dump().indent(2))
+                        );
+                        return sb.toString();
+                    }
+                }
+                Map<Integer,FenwickNode> nodesMap =
+                    new TreeMap<>(Comparator.reverseOrder());
+                final int N = fenwickArr.length - 1;
+                FenwickNode root = new FenwickNode(N, fenwickArr[N]);
+                nodesMap.put(N, root);
+                for (int index = N - 1; index > 0; index--) {
+                    FenwickNode node = new FenwickNode(index, fenwickArr[index]);
+                    nodesMap.put(index, node);
+                    int parentIndex = index + index & (-index);
+                    if (parentIndex <= N) {
+                        FenwickNode parentNode = nodesMap.get(parentIndex);
+                        parentNode.children.put(index, node);
+                        node.parent = parentNode;
+                    }
+                }
+                return nodesMap.values().stream()
+                        .filter(node -> node.parent == null)
+                        .map(FenwickNode::dump)
+                        .collect(Collectors.joining()) +
+                    "fenwickArr --> " + Arrays.toString(fenwickArr) + System.lineSeparator();
             }
         }
     }
