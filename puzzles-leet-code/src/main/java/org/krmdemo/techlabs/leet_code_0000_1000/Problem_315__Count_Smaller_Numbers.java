@@ -26,7 +26,7 @@ public interface Problem_315__Count_Smaller_Numbers {
 
     enum Solution implements Problem_315__Count_Smaller_Numbers {
         /**
-         * This simplest approach results in "Time Limit Exceeded" - TODO: optimize using Segment-Tree
+         * This simplest approach results in "Time Limit Exceeded"
          */
         TREE_SET {
             @Override
@@ -50,6 +50,120 @@ public interface Problem_315__Count_Smaller_Numbers {
                     }
                 }
             }
-        }
+        },
+        /**
+         * Here the array-based segment-tree is used
+         */
+        SEGMENT_TREE_ARR {
+            @Override
+            public List<Integer> countSmaller(int[] nums) {
+                System.out.printf("%s.countSmaller ( %s )%n", name(), Arrays.toString(nums));
+                Integer[] smallerCountArr = new Integer[nums.length];
+                SegmentTreeArray st = new SegmentTreeArray(nums);
+                if (st.hasCapacity()) {
+                    for (int i = nums.length - 1; i >= 0; i--) {
+                        int value = nums[i];
+                        smallerCountArr[i] = st.countLess(value);
+                        st.incrementCount(value);
+                    }
+                    System.out.println(st);
+                } else {
+                    System.out.println("segment tree capacity is zero");
+                    Arrays.fill(smallerCountArr, 0);
+                }
+                return Arrays.asList(smallerCountArr);
+            }
+
+            private static class SegmentTreeArray {
+
+                private final int offset;
+                private final int capacity;
+                private final int[] segmentArr;
+
+                SegmentTreeArray(int[] nums) {
+                    int minValue = nums[0];
+                    int maxValue = nums[0];
+                    for (int i = 1; i < nums.length; i++) {
+                        minValue = Math.min(minValue, nums[i]);
+                        maxValue = Math.max(maxValue, nums[i]);
+                    }
+                    this(minValue, maxValue);  // <-- this will not be compiled on JDK prior to 22
+                }
+
+                SegmentTreeArray(int minValue, int maxValue) {
+                    int capacity = maxValue - minValue;
+                    capacity = Integer.highestOneBit(capacity << 1);
+                    int segemntSize = capacity << 1;
+                    this.segmentArr = new int[segemntSize];
+                    this.offset = minValue;
+                    this.capacity = capacity;
+                }
+
+                public boolean hasCapacity() {
+                    return this.capacity > 0;
+                }
+
+                public void incrementCount(int value) {
+                    updateCount(value, 1);
+                }
+
+                public void updateCount(int value, int count) {
+                    int index = checkIndex(value);
+                    while (index > 0) {
+                        segmentArr[index] += count;
+                        index = index >> 1;
+                    }
+                }
+
+                public int count(int value) {
+                    int index = checkIndex(value);
+                    return segmentArr[index];
+                }
+
+                public int countLess(int value) {
+                    int totalCountLess = 0;
+                    int index = checkIndex(value);
+                    while (index > 0) {
+                        int parent = index >> 1;
+                        if ((index & 1) == 1) {
+                            int countLess = segmentArr[parent << 1];
+                            totalCountLess += countLess;
+                        }
+                        index = parent;
+                    }
+                    return totalCountLess;
+                }
+
+                private int checkIndex(int value) {
+                    if (value < this.offset) {
+                        throw new IllegalArgumentException(String.format(
+                            "value must NOT be less than %d, but it equals to %d",
+                            offset, value));
+                    }
+                    int index = value - this.offset;
+                    if (index >= this.capacity) {
+                        throw new IllegalArgumentException(String.format(
+                            "value must be less than %d, but it equals to %d",
+                            value, this.capacity - this.offset));
+                    }
+                    return index + this.capacity;
+                }
+
+                @Override
+                public String toString() {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(String.format("%s ( offset = %d, capacity = %d ):%n",
+                        getClass().getSimpleName(), this.offset, this.capacity));
+                    int maxLevel = Integer.numberOfTrailingZeros(this.capacity) + 1;
+                    for (int level = 1; level <= maxLevel; level++) {
+                        int start = 1 << (level - 1);
+                        int end = start << 1;
+                        List<Integer> levelList = Arrays.stream(segmentArr, start, end).boxed().toList();
+                        sb.append(String.format("%2d :: %s %n", level, levelList));
+                    }
+                    return sb.toString();
+                }
+            }
+        };
     }
 }

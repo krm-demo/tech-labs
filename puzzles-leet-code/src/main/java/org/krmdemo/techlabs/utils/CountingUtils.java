@@ -49,11 +49,6 @@ public class CountingUtils {
         return valuesStream.collect(groupingBy(identity(), LinkedHashMap::new, summingInt(v -> 1)));
     }
 
-    private static class SegmentTree256 {
-        int[] parentsCount = new int[256];
-        BitSet leaves = new BitSet();
-    }
-
     // ------------------------------------------------------------------------------------------------------
 
     private CountingUtils() {
