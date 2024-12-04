@@ -1,5 +1,6 @@
 package org.krmdemo.techlabs.leet_code_1000_2000;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
@@ -86,8 +87,8 @@ public interface Problem_1392__Longest_Happy_Prefix {
                 System.out.printf("prevPos = %2d'%c'; borderLength = %2d'%c'; longestBorder --> %s;%n",
                     0, s.charAt(0), borderLength, s.charAt(0), dumpPrefixArr(longestBorder, 1));
                 while (pos < N) {
-                    char charPos = s.charAt(pos);
-                    char charPrefix = s.charAt(borderLength);
+                    char charPos = s.charAt(pos);  // <-- using char-array here improves the performance >30% !!!
+                    char charPrefix = s.charAt(borderLength); // ... from 10ms to 6ms ( beat from 63.67% to 97.58% )
                     int prevPos = pos;
                     if (charPos == charPrefix) {
                         borderLength++;
@@ -128,8 +129,6 @@ public interface Problem_1392__Longest_Happy_Prefix {
          * </a>
          */
         RABIN_KARP_INCR {
-            final static int CHARS_NUMBER = 26;
-            final static int MOD = 1_000_000_007;
             @Override
             public String longestPrefix(String s) {
                 if (s == null || s.length() <= 1) {
@@ -161,7 +160,70 @@ public interface Problem_1392__Longest_Happy_Prefix {
                 }
                 return s.substring(0, maxLen);
             }
+        },
+        /**
+         * This approach is using <b>decremental</b> single hash, which is also known as
+         * <a href="https://www.geeksforgeeks.org/rabin-karp-algorithm-for-pattern-searching/">
+         *     Rabin-Karp Algorithm for Pattern Searching
+         * </a>
+         */
+        RABIN_KARP_DECR {
+            @Override
+            public String longestPrefix(String s) {
+                if (s == null || s.length() <= 1) {
+                    System.out.printf("%s.longestPrefix: returning empty string.%n", name());
+                    return "";
+                }
+                System.out.printf("%s.longestPrefix('%s'):%n", name(), s);
+                final int N = s.length();
+                char[] charsArr = s.toCharArray();
+                long hashPrefix = forwardHash(s);
+                long hashSuffix = hashPrefix;
+                long invChNum = modInverse(CHARS_NUMBER, MOD);
+                long powChNum = modPow(CHARS_NUMBER, N, MOD);
+                System.out.printf("- invChNum = %,d;%n", invChNum);
+                System.out.printf("- powChNum = %,d;%n", powChNum);
+                for (int i = 0; i < N - 1; i++) {
+                    int charPrefix = s.charAt(i) - 'a';
+                    int charSuffix = s.charAt(N - i - 1) - 'a';
+                    powChNum = powChNum * invChNum % MOD;
+                    hashPrefix = (hashPrefix - charSuffix) * invChNum % MOD;
+                    hashSuffix = (MOD + hashSuffix - powChNum * charPrefix % MOD) % MOD;
+                    if (hashPrefix == hashSuffix
+                        && equalTwoSubStr(charsArr, 0, i + 1, N - i - 1))
+                    {
+                        System.out.printf("- match at i = %d, len = %d: '%s'",
+                            i, N - i - 1, s.substring(i + 1));
+                        return s.substring(i + 1);
+                    }
+                }
+                System.out.println("- no matches were found");
+                return "";
+            }
         };
+
+        private static long forwardHash(String str) {
+            return str.chars()
+                .mapToLong(ch -> (long)ch - 'a')
+                .reduce(0, (hash, value) ->
+                    (hash * CHARS_NUMBER + value) % MOD
+                );
+        }
+
+        private static long modInverse(long value, long mod) {
+            return BigInteger.valueOf(value)
+                .modInverse(BigInteger.valueOf(mod))
+                .longValueExact();
+        }
+
+        private static long modPow(long value, long pow, long mod) {
+            return BigInteger.valueOf(value)
+                .modPow(BigInteger.valueOf(pow), BigInteger.valueOf(mod))
+                .longValueExact();
+        }
+
+        final static int CHARS_NUMBER = 26;
+        final static int MOD = 1_000_000_007;
 
         private static boolean equalHeadTail(char[] charsArr, int prefixLen, int partLen) {
             int startOne = 0;
@@ -186,6 +248,10 @@ public interface Problem_1392__Longest_Happy_Prefix {
             return true;
         }
 
+        private static boolean equalTwoSubStr(char[] charsArr, int startOne, int startTwo, int len) {
+            return !notEqualTwoSubStr(charsArr, startOne, startTwo, len);
+        }
+
         private static boolean notEqualTwoSubStr(char[] charsArr, int startOne, int startTwo, int len) {
             if (Math.max(startOne, startTwo) + len > charsArr.length) {
                 return startOne != startTwo;
@@ -196,16 +262,6 @@ public interface Problem_1392__Longest_Happy_Prefix {
                 }
             }
             return false;
-        }
-
-        private static String prefixTail(String str, int headLen, int prefixLen) {
-            return str.substring(headLen, prefixLen);
-        }
-
-        private static String suffixHead(String str, int tailLen, int suffixLen) {
-            int beginIndex = str.length() - suffixLen;
-            int endIndex = beginIndex + (suffixLen - tailLen);
-            return str.substring(beginIndex, endIndex);
         }
     }
 }

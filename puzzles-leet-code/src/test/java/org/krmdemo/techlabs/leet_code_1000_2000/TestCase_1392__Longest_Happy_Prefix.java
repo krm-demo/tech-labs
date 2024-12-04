@@ -57,11 +57,9 @@ public class TestCase_1392__Longest_Happy_Prefix {
         )).isEqualTo("aa");
     }
 
-
     @EnumSource
     @ParameterizedTest
     void test_tc_71_of_83(Problem_1392__Longest_Happy_Prefix.Solution sln) {
         assertThat(sln.longestPrefix("aacaacaaca")).hasSize(7).isEqualTo("aacaaca");
     }
-
 }
