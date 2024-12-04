@@ -10,6 +10,7 @@ package org.krmdemo.techlabs.leet_code_0000_1000;
  * is not part of <b><code>haystack</code></b>.
  *
  * @see org.krmdemo.techlabs.leet_code_1000_2000.Problem_1392__Longest_Happy_Prefix
+ * @see org.krmdemo.techlabs.gfg_strings.GFG_Strings__Search_Pattern_KMP
  */
 public interface Problem_028__Index_Of_SubStr {
 

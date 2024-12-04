@@ -24,7 +24,6 @@ public interface GFG_Strings__Search_Pattern_KMP {
 
     ArrayList<Integer> search(String pat, String txt);
 
-    // TODO: add Test-Cases for solutions below:
     enum Solution implements GFG_Strings__Search_Pattern_KMP {
         /**
          * This approach is just subsequently looking for index of sub-string
