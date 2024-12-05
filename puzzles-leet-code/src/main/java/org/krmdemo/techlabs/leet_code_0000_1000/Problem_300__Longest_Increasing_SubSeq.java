@@ -3,167 +3,79 @@ package org.krmdemo.techlabs.leet_code_0000_1000;
 import java.util.*;
 
 /**
- * <h3><a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/description/">
- *     315. Count of Smaller Numbers After Self
+ * <h3><a href="https://leetcode.com/problems/longest-increasing-subsequence/description/">
+ *     300. Longest Increasing Subsequence
  * </a></h3>
- * Given an integer array <code>nums</code>, return an integer array <code>counts</code>
- * where <code>counts[<b>i</b>]</code> is the number of smaller elements
- * to the right of <code>nums[<b>i</b>]</code>.
- * <h5>Constraints:</h5><pre>
- * 1 <= nums.length <= 10^5
- * -10^4 <= nums[i] <= 10^4
- * </pre>
+ * Given an integer array <code>nums</code>, return the length of
+ * the longest strictly increasing subsequence.
+ * <p><small>A <b>subsequence</b> is an array that can be derived from another array
+ * by deleting some or no elements without changing the order of the remaining elements.
+ * </small></p>
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/Longest_increasing_subsequence">
+ *      (wiki) Longest increasing subsequence
+ * </a>
  */
-public interface Problem_315__Count_Smaller_Numbers {
+public interface Problem_300__Longest_Increasing_SubSeq {
 
     /**
-     * Solution entry-point.
+     * Solution entry-point
      *
-     * @param nums an integer array
-     * @return the list of the number of smaller elements after given index
+     * @param nums an array of any integers
+     * @return the length of the longest strictly increasing subsequence
      */
-    List<Integer> countSmaller(int[] nums);
+    int lengthOfLIS(int[] nums);
 
-    enum Solution implements Problem_315__Count_Smaller_Numbers {
-        /**
-         * This simplest approach results in "Time Limit Exceeded"
-         */
-        TREE_SET {
-            @Override
-            public List<Integer> countSmaller(int[] nums) {
-                Integer[] smallerCountArr = new Integer[nums.length];
-                NavigableSet<ValueIndex> navSet = new TreeSet<>();
-                for (int i = nums.length - 1; i >= 0; i--) {
-                    ValueIndex vi = new ValueIndex(nums[i], i);
-                    smallerCountArr[i] = navSet.headSet(vi).size();
-                    navSet.add(new ValueIndex(nums[i], i));
-                }
-                return Arrays.asList(smallerCountArr);
-            }
-            record ValueIndex(int value, int index) implements Comparable<ValueIndex> {
-                @Override
-                public int compareTo(ValueIndex other) {
-                    if (this.value != other.value) {
-                        return this.value - other.value;
-                    } else {
-                        return this.index - other.index;
-                    }
-                }
-            }
-        },
-        /**
-         * Here the array-based segment-tree is used
-         */
-        SEGMENT_TREE_ARR {
-            @Override
-            public List<Integer> countSmaller(int[] nums) {
-                System.out.printf("%s.countSmaller ( %s )%n", name(), Arrays.toString(nums));
-                Integer[] smallerCountArr = new Integer[nums.length];
-                SegmentTreeArray st = new SegmentTreeArray(nums);
-                if (st.hasCapacity()) {
-                    for (int i = nums.length - 1; i >= 0; i--) {
-                        int value = nums[i];
-                        smallerCountArr[i] = st.countLess(value);
-                        st.incrementCount(value);
-                    }
-                    System.out.println(st);
+    enum Solution implements Problem_300__Longest_Increasing_SubSeq {
+        DEFAULT;
+
+        public int lengthOfLIS(int[] nums) {
+            System.out.println("... lengthOfLIS ( " + Arrays.toString(nums) + " ) ...");
+            ArrayList<Integer> sub = new ArrayList<>();
+            sub.add(nums[0]);
+
+            System.out.println("initially (i = 0) sub -> " + sub);
+            for (int i = 1; i < nums.length; i++) {
+                int num = nums[i];
+                if (num > sub.getLast()) {
+                    sub.add(num);
+                    System.out.printf("(nums[%d] = %d) adding to sub --> %s;%n", i, num, sub);
                 } else {
-                    System.out.println("segment tree capacity is zero");
-                    Arrays.fill(smallerCountArr, 0);
-                }
-                return Arrays.asList(smallerCountArr);
-            }
-
-            private static class SegmentTreeArray {
-
-                private final int offset;
-                private final int capacity;
-                private final int[] segmentArr;
-
-                SegmentTreeArray(int[] nums) {
-                    int minValue = nums[0];
-                    int maxValue = nums[0];
-                    for (int i = 1; i < nums.length; i++) {
-                        minValue = Math.min(minValue, nums[i]);
-                        maxValue = Math.max(maxValue, nums[i]);
-                    }
-                    this(minValue, maxValue);  // <-- this will not be compiled on JDK prior to 22
-                }
-
-                SegmentTreeArray(int minValue, int maxValue) {
-                    int capacity = maxValue - minValue;
-                    capacity = Integer.highestOneBit(capacity << 1);
-                    int segemntSize = capacity << 1;
-                    this.segmentArr = new int[segemntSize];
-                    this.offset = minValue;
-                    this.capacity = capacity;
-                }
-
-                public boolean hasCapacity() {
-                    return this.capacity > 0;
-                }
-
-                public void incrementCount(int value) {
-                    updateCount(value, 1);
-                }
-
-                public void updateCount(int value, int count) {
-                    int index = checkIndex(value);
-                    while (index > 0) {
-                        segmentArr[index] += count;
-                        index = index >> 1;
-                    }
-                }
-
-                public int count(int value) {
-                    int index = checkIndex(value);
-                    return segmentArr[index];
-                }
-
-                public int countLess(int value) {
-                    int totalCountLess = 0;
-                    int index = checkIndex(value);
-                    while (index > 0) {
-                        int parent = index >> 1;
-                        if ((index & 1) == 1) {
-                            int countLess = segmentArr[parent << 1];
-                            totalCountLess += countLess;
-                        }
-                        index = parent;
-                    }
-                    return totalCountLess;
-                }
-
-                private int checkIndex(int value) {
-                    if (value < this.offset) {
-                        throw new IllegalArgumentException(String.format(
-                            "value must NOT be less than %d, but it equals to %d",
-                            offset, value));
-                    }
-                    int index = value - this.offset;
-                    if (index >= this.capacity) {
-                        throw new IllegalArgumentException(String.format(
-                            "value must be less than %d, but it equals to %d",
-                            value, this.capacity - this.offset));
-                    }
-                    return index + this.capacity;
-                }
-
-                @Override
-                public String toString() {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(String.format("%s ( offset = %d, capacity = %d ):%n",
-                        getClass().getSimpleName(), this.offset, this.capacity));
-                    int maxLevel = Integer.numberOfTrailingZeros(this.capacity) + 1;
-                    for (int level = 1; level <= maxLevel; level++) {
-                        int start = 1 << (level - 1);
-                        int end = start << 1;
-                        List<Integer> levelList = Arrays.stream(segmentArr, start, end).boxed().toList();
-                        sb.append(String.format("%2d :: %s %n", level, levelList));
-                    }
-                    return sb.toString();
+                    int j = binarySearch(sub, num);
+                    sub.set(j, num);
+                    System.out.printf("(nums[%d] = %d) setting at #%d --> %s;%n", i, num, j, sub);
                 }
             }
-        };
+            System.out.println("returning --> " + sub);
+            return sub.size();
+        }
+
+        /**
+         * This working version of binary-search is a good example when the located value
+         * is going to either override/substitute the smaller value or add the new one to the head or to the tail.
+         *
+         * @param sub the list to look up the value
+         * @param num the value either to find for substitution/overriding or for inserting to the head or to the tail
+         * @return the index to perform subsequent {@link List#add(Object)} or {@link List#set(int, Object)}
+         */
+        private int binarySearch(List<Integer> sub, int num) {
+            int left = 0;
+            int right = sub.size() - 1;
+
+            while (left < right) {
+                int mid = (left + right) / 2;
+                if (sub.get(mid) == num) {
+                    return mid;
+                }
+
+                if (sub.get(mid) < num) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+
+            return left;
+        }
     }
 }
