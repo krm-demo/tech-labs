@@ -13,6 +13,8 @@ import java.util.*;
  * -10 <= nums[i] <= 10
  * </pre>
  * The product of any sub-array of nums is <b>guaranteed</b> to fit in a <b>32-bit</b> integer.
+ *
+ * @see org.krmdemo.techlabs.gfg_arrays.GFG_Arrays__Longest_SubArr_Positive_Product
  */
 public interface Problem_152__Max_Product_SubArr {
 

@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Test-Case for Leet-Code puzzle {@link GFG_Strings__Search_Pattern_KMP}
+ * Test-Case for Geek-For-Geeks puzzle {@link GFG_Strings__Search_Pattern_KMP}
  */
 class TestCase_GFG_Strings__Search_Pattern_KMP {
 

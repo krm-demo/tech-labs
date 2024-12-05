@@ -22,6 +22,13 @@ import java.util.*;
  */
 public interface GFG_Strings__Search_Pattern_KMP {
 
+    /**
+     * GFG-Solution entry-point
+     *
+     * @param pat a pattern for the strict-search (no wild-cards or regexp)
+     * @param txt the string to find indexes of all sub-strings that equals to <code>pat</code>
+     * @return indexes of found sub-strings as {@link ArrayList}
+     */
     ArrayList<Integer> search(String pat, String txt);
 
     enum Solution implements GFG_Strings__Search_Pattern_KMP {
@@ -77,7 +84,7 @@ public interface GFG_Strings__Search_Pattern_KMP {
             }
         },
         /**
-         * In this approach the search-pattern and the text are concatenated via '$'-symbol
+         * In this approach the search-pattern and the text are concatenated via <code>'$'</code>-symbol
          * and the found array is just indexes of proper elements of {@link #longestBorderFor(String) LPS-Array}.
          * <h6>GFG: Time Taken <code>2.26</code></h6>
          */
@@ -111,7 +118,7 @@ public interface GFG_Strings__Search_Pattern_KMP {
          * <hr/>
          * The <b>border</b> of string is its prefix that is equal to its suffix, but excluding the whole string itself.
          * In case of no such prefixes and suffixes the border is considered to be an empty string.
-         * In scope of KMP-Algorithm we are interesting to find the length longest border
+         * In scope of KMP-Algorithm we are interested to find the length of the longest border
          * for each sub-string like <code>[s[:i] for i in range(1..len(s))]</code>.
          *
          * @param str the string to build LPS-Array (longest border)
