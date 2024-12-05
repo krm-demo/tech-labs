@@ -15,6 +15,9 @@ import java.util.*;
  * @see <a href="https://en.wikipedia.org/wiki/Longest_increasing_subsequence">
  *      (wiki) Longest increasing subsequence
  * </a>
+ * @see <a href="https://www.geeksforgeeks.org/problems/longest-increasing-subsequence-1587115620/1">
+ *      (GFG Puzzle) Longest Increasing Subsequence
+ * </a>
  */
 public interface Problem_300__Longest_Increasing_SubSeq {
 
@@ -27,7 +30,54 @@ public interface Problem_300__Longest_Increasing_SubSeq {
     int lengthOfLIS(int[] nums);
 
     enum Solution implements Problem_300__Longest_Increasing_SubSeq {
-        DEFAULT;
+        BINARY_SEARCH_OWN {
+            /**
+             * This working version of binary-search is a good example when the located value
+             * is going to either override/substitute the smaller value or add the new one to the head or to the tail.
+             * <hr/>
+             * Unlike the standard JDK {@link Collections#binarySearch(List, Object)} it does not return
+             * the negative value, but the value of index ready to use for substitution
+             *
+             * @param valuesList the {@link List} of integers to look up the value
+             * @param value the value either to find for substitution/overriding or
+             *              for inserting to the head or to the tail
+             * @return the index to perform subsequent {@link List#add(Object)} or {@link List#set(int, Object)}
+             */
+            @Override
+            int binarySearchToSubst(List<Integer> valuesList, int value) {
+                int left = 0;
+                int right = valuesList.size() - 1;
+                while (left < right) {
+                    int mid = (left + right) / 2;
+                    int midValue = valuesList.get(mid);
+                    if (midValue == value) {
+                        return mid;
+                    }
+                    if (midValue < value) {
+                        left = mid + 1;
+                    } else {
+                        right = mid;
+                    }
+                }
+                return left; // <-- always positive value within the index-range of a given list
+            }
+        },
+        BINARY_SEARCH_JDK {
+            /**
+             * Delegating to {@link Collections#binarySearch(List, Object)}
+             * and the negative value is converted to the positive with adding <code>1</code>.
+             *
+             * @param valuesList the {@link List} of integers to look up the value
+             * @param value the value either to find for substitution/overriding or
+             *              for inserting to the head or to the tail
+             * @return the index to perform subsequent {@link List#add(Object)} or {@link List#set(int, Object)}
+             */
+            @Override
+            int binarySearchToSubst(List<Integer> valuesList, int value) {
+                int index = Collections.binarySearch(valuesList, value);
+                return index >= 0 ? index : -(index + 1);
+            }
+        };
 
         public int lengthOfLIS(int[] nums) {
             System.out.println("... lengthOfLIS ( " + Arrays.toString(nums) + " ) ...");
@@ -41,9 +91,10 @@ public interface Problem_300__Longest_Increasing_SubSeq {
                     sub.add(num);
                     System.out.printf("(nums[%d] = %d) adding to sub --> %s;%n", i, num, sub);
                 } else {
-                    int j = binarySearch(sub, num);
+                    int j = binarySearchToSubst(sub, num);
                     sub.set(j, num);
                     System.out.printf("(nums[%d] = %d) setting at #%d --> %s;%n", i, num, j, sub);
+
                 }
             }
             System.out.println("returning --> " + sub);
@@ -51,31 +102,11 @@ public interface Problem_300__Longest_Increasing_SubSeq {
         }
 
         /**
-         * This working version of binary-search is a good example when the located value
-         * is going to either override/substitute the smaller value or add the new one to the head or to the tail.
-         *
-         * @param sub the list to look up the value
-         * @param num the value either to find for substitution/overriding or for inserting to the head or to the tail
+         * @param valuesList the list to look up the value
+         * @param value the value either to find for substitution/overriding or
+         *              for inserting to the head or to the tail
          * @return the index to perform subsequent {@link List#add(Object)} or {@link List#set(int, Object)}
          */
-        private int binarySearch(List<Integer> sub, int num) {
-            int left = 0;
-            int right = sub.size() - 1;
-
-            while (left < right) {
-                int mid = (left + right) / 2;
-                if (sub.get(mid) == num) {
-                    return mid;
-                }
-
-                if (sub.get(mid) < num) {
-                    left = mid + 1;
-                } else {
-                    right = mid;
-                }
-            }
-
-            return left;
-        }
+        abstract int binarySearchToSubst(List<Integer> valuesList, int value);
     }
 }
