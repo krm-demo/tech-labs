@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test-Case for Geek-For-Geeks puzzle {@link GFG_Arrays__Longest_SubArr_Positive_Product}
  */
-class TestCase_GFG_Arrays__Longest_SubArr_Positive_Product {
+public class TestCase_GFG_Arrays__Longest_SubArr_Positive_Product {
 
     GFG_Arrays__Longest_SubArr_Positive_Product sln =
         GFG_Arrays__Longest_SubArr_Positive_Product.Solution.DEFAULT;

@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test-Case for Geek-For-Geeks puzzle {@link GFG_Strings__Search_Pattern_KMP}
  */
-class TestCase_GFG_Strings__Search_Pattern_KMP {
+public class TestCase_GFG_Strings__Search_Pattern_KMP {
 
     @EnumSource
     @ParameterizedTest

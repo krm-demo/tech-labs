@@ -2,8 +2,6 @@ package org.krmdemo.techlabs.leet_code_1000_2000;
 
 import java.util.*;
 
-import static java.util.Collections.binarySearch;
-
 /**
  * <h3><a href="https://leetcode.com/problems/minimum-number-of-removals-to-make-mountain-array/">
  *     1671. Minimum Number of Removals to Make Mountain Array
@@ -32,22 +30,51 @@ public interface Problem_1671__Making_Mountain_Array_Min_Removals {
      */
     int minimumMountainRemovals(int[] nums);
 
+    /**
+     * Calculating the length of the <b>longest increasing subsequence</b>, that is <b>preceding</b> each element
+     *
+     * @param nums the array of integer to calculate the length of the LIS, that is preceding each element
+     * @return the array of LIS-lengths for corresponding element in array <code>nums</code>
+     */
+    int[] lengthArrLIS(int[] nums);
+
+    /**
+     * Calculating the length of the <b>longest decreasing subsequence</b>, that <b>follows</b> each element
+     *
+     * @param nums the array of integer to calculate the length of the LDS, that follows each element
+     * @return the array of LDS-lengths for corresponding element in array <code>nums</code>
+     */
+    int[] lengthArrLDS(int[] nums);
+
     enum Solution implements Problem_1671__Making_Mountain_Array_Min_Removals {
         DEFAULT;
 
         @Override
         public int minimumMountainRemovals(int[] nums) {
-            // TODO: to be completed
-            return 0;
+            final int N = nums.length;
+            int[] longestBefore = lengthArrLIS(nums);
+            int[] longestAfter = lengthArrLDS(nums);
+            System.out.println("initial nums --> " + Arrays.toString(nums));
+            System.out.println("LIS before.  --> " + Arrays.toString(longestBefore));
+            System.out.println("LDS after    --> " + Arrays.toString(longestAfter));
+            int minRomovals = N;
+            for (int i = 0; i < N; i++) {
+                System.out.printf("(%2d): %d<=[%d]=>%d --> LIS before: %d, LDS after: %d",
+                    nums[i], i + 1, i, N - i, longestBefore[i], longestAfter[i]);
+                if (longestBefore[i] < 2 || longestAfter[i] < 2) {
+                    System.out.println(":: skip, no mountain");
+                    continue;
+                }
+                int mountainLength = longestBefore[i] + longestAfter[i] - 1;
+                minRomovals = Math.min(minRomovals, N - mountainLength);
+                System.out.printf(":: mountainLength: %d, removals: %d from %d, minRomovals = %d;%n",
+                    mountainLength, N - mountainLength, N, minRomovals);
+            }
+            return minRomovals;
         }
 
-        /**
-         * Calculating the length of the <b>longest increasing subsequence</b>, that is <b>preceding</b> each element
-         *
-         * @param nums the array of integer to calculate the length of the LIS, that is preceding each element
-         * @return the array of LIS-lengths for corresponding element in array <code>nums</code>
-         */
-        int[] lengthArrLIS(int[] nums) {
+        @Override
+        public int[] lengthArrLIS(int[] nums) {
             int[] longestLengthArr = new int[nums.length];
             List<Integer> incrSubSeq = new ArrayList<>();
             incrSubSeq.add(nums[0]);
@@ -65,15 +92,8 @@ public interface Problem_1671__Making_Mountain_Array_Min_Removals {
             return longestLengthArr;
         }
 
-        /**
-         * Calculating the length of the <b>longest decreasing subsequence</b>, that <b>follows</b> each element
-         * <hr/>
-         * TODO: not tested properly yet
-         *
-         * @param nums the array of integer to calculate the length of the LDS, that follows each element
-         * @return the array of LDS-lengths for corresponding element in array <code>nums</code>
-         */
-        int[] lengthArrLDS(int[] nums) {
+        @Override
+        public int[] lengthArrLDS(int[] nums) {
             final int N = nums.length;
             int[] longestLengthArr = new int[N];
             List<Integer> incrSubSeq = new ArrayList<>();

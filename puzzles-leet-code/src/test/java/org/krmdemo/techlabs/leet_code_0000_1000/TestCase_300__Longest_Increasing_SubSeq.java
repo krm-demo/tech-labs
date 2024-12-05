@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test-Case for Leet-Code puzzle {@link Problem_300__Longest_Increasing_SubSeq}
  */
-class TestCase_300__Longest_Increasing_SubSeq {
+public class TestCase_300__Longest_Increasing_SubSeq {
 
     @EnumSource
     @ParameterizedTest
