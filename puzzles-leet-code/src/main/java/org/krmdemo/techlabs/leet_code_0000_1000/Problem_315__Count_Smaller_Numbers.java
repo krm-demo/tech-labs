@@ -13,6 +13,9 @@ import java.util.*;
  * 1 <= nums.length <= 10^5
  * -10^4 <= nums[i] <= 10^4
  * </pre>
+ *
+ * @see org.krmdemo.techlabs.utils.SegmentTree
+ * @see org.krmdemo.techlabs.gfg_arrays.GFG_Arrays__Count_Smaller_Elements
  */
 public interface Problem_315__Count_Smaller_Numbers {
 
