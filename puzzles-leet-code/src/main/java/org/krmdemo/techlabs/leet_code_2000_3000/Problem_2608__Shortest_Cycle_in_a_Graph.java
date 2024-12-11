@@ -3,7 +3,6 @@ package org.krmdemo.techlabs.leet_code_2000_3000;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * <h3><a href="https://leetcode.com/problems/shortest-cycle-in-a-graph/description/">
@@ -57,7 +56,11 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
             List<Graph.SubGraph> subGraphList = graph.subGraphList();
             System.out.printf("%d DFS-Spanning Trees were found:%n", subGraphList.size());
             subGraphList.forEach(System.out::println);
-            return 0; // TODO: use Tarjan or Kasaraju algorithm
+            return 0; // TODO: complete
+//            return subGraphList.stream()
+//                .map(Graph.SubGraph::minCycle)
+//                .flatMapToInt(OptionalInt::stream)
+//                .min().orElse(-1);
         }
 
         private static class Graph {
@@ -107,10 +110,12 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
             private class SubNode {
                 final Node node;
                 final int order;
+                final SubNode parent;
                 List<SubNode> backRefList = new ArrayList<>();
-                public SubNode(int id, int order) {
+                public SubNode(int id, int order, SubNode parent) {
                     this.node = node(id);
                     this.order = order;
+                    this.parent = parent;
                 }
                 int order() {
                     return this.order;
@@ -119,6 +124,12 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
                     if (subNode.order > this.order + 1) {
                         backRefList.add(subNode);
                     }
+                }
+                Deque<SubNode> rootPath() {
+                    Deque<SubNode> parentPath = parent == null ?
+                        new ArrayDeque<>() : parent.rootPath();
+                    parentPath.addLast(this);
+                    return parentPath;
                 }
                 @Override
                 public String toString() {
@@ -130,18 +141,18 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
                 public String dumpBackRefs() {
                     return backRefList.stream()
                         .map(SubNode::dump)
-                        .collect(Collectors.joining(",","{","}"));
+                        .collect(Collectors.joining(", ","{ "," }"));
                 }
              }
             private class SubGraph {
                 Map<Integer, SubNode> subNodesMap = new HashMap<>();
-                Deque<SubNode> eulerialPath = new ArrayDeque<>();
                 SubGraph(int rootId) {
-                    newSubNode(rootId);
+                    newSubNode(rootId, new ArrayDeque<>());
                 }
-                void newSubNode(int id) {
-                    SubNode subNode = new SubNode(id, subNodesMap.size());
+                void newSubNode(int id, Deque<SubNode> rootPath) {
+                    SubNode subNode = new SubNode(id, subNodesMap.size(), rootPath.peekLast());
                     subNodesMap.put(id, subNode);
+                    rootPath.addLast(subNode);
                     int[] neighbourIDs = subNode.node.neighbours.stream()
                         .filter(neighbourId -> !visited.get(neighbourId))
                         .toArray();
@@ -150,11 +161,23 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
                         if (backNode != null) {
                             subNode.addBackRef(backNode);
                         } else {
-                            eulerialPath.addLast(subNode);
-                            newSubNode(neighbourId);
+                            newSubNode(neighbourId, rootPath);
                         }
                     }
-                    eulerialPath.addLast(subNode);
+                    rootPath.removeLast();
+                }
+                int pathLen(Deque<SubNode> pathOne, Deque<SubNode> pathTwo) {
+                    int commonHeadLen = 0;
+                    Iterator<SubNode> itOne = pathOne.iterator();
+                    Iterator<SubNode> itTwo = pathTwo.iterator();
+                    while (itOne.hasNext() && itTwo.hasNext() && itOne.next() == itTwo.next()) {
+                        commonHeadLen++;
+                    }
+                    if (commonHeadLen == 0) {
+                        throw new IllegalStateException(
+                            "no common parts of root-path");
+                    }
+                    return pathOne.size() + pathOne.size() - commonHeadLen;
                 }
                 @Override
                 public String toString() {
@@ -164,13 +187,8 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
                         .collect(Collectors.joining(
                             System.lineSeparator(),
                             String.format("~~~ sub-graph of %d nodes: ~~~%n", subNodesMap.size()),
-                            String.format("%n:: %s ::", dumpEulerialPath())
+                            String.format("%n:: TODO: ... ::")
                         ));
-                }
-                public String dumpEulerialPath() {
-                    return eulerialPath.stream()
-                        .map(SubNode::dump)
-                        .collect(Collectors.joining(";"));
                 }
             }
             List<SubGraph> subGraphList() {
