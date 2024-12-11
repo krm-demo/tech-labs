@@ -13,6 +13,8 @@ import java.util.*;
  * 1 ≤ arr.size() ≤ 10^5
  * 0 ≤ starti ≤ endi ≤ 10^5
  * </pre>
+ *
+ * @see org.krmdemo.techlabs.leet_code_0000_1000.Problem_056__Merge_Intervals
  */
 public interface GFG_Arrays__Intervals_Overlap {
 

@@ -9,6 +9,8 @@ import java.util.*;
  * Given an array of intervals where <code>intervals[i] = [start_<b>i</b>, end_<b>i</b>]</code>,
  * merge all overlapping intervals, and return an array of the non-overlapping intervals
  * that cover all the intervals in the input.
+ *
+ * @see org.krmdemo.techlabs.gfg_arrays.GFG_Arrays__Intervals_Overlap
  */
 public interface Problem_056__Merge_Intervals {
 
