@@ -56,11 +56,10 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
             List<Graph.SubGraph> subGraphList = graph.subGraphList();
             System.out.printf("%d DFS-Spanning Trees were found:%n", subGraphList.size());
             subGraphList.forEach(System.out::println);
-            return 0; // TODO: complete
-//            return subGraphList.stream()
-//                .map(Graph.SubGraph::minCycle)
-//                .flatMapToInt(OptionalInt::stream)
-//                .min().orElse(-1);
+            return subGraphList.stream()
+                .map(Graph.SubGraph::minCycleMain)
+                .flatMapToInt(OptionalInt::stream)
+                .min().orElse(-1);
         }
 
         private static class Graph {
@@ -111,7 +110,6 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
                 final Node node;
                 final int order;
                 final SubNode parent;
-                List<SubNode> backRefList = new ArrayList<>();
                 public SubNode(int id, int order, SubNode parent) {
                     this.node = node(id);
                     this.order = order;
@@ -119,11 +117,6 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
                 }
                 int order() {
                     return this.order;
-                }
-                void addBackRef(SubNode subNode) {
-                    if (subNode.order > this.order + 1) {
-                        backRefList.add(subNode);
-                    }
                 }
                 Deque<SubNode> rootPath() {
                     Deque<SubNode> parentPath = parent == null ?
@@ -133,51 +126,74 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
                 }
                 @Override
                 public String toString() {
-                    return this.dump() + (backRefList.isEmpty() ? "" : this.dumpBackRefs());
+                    return this.dump();
                 }
                 public String dump() {
                     return String.format("#%d%s", order, node.dump());
                 }
-                public String dumpBackRefs() {
-                    return backRefList.stream()
-                        .map(SubNode::dump)
-                        .collect(Collectors.joining(", ","{ "," }"));
-                }
              }
             private class SubGraph {
-                Map<Integer, SubNode> subNodesMap = new HashMap<>();
+                Integer minCycleMain = null;
+                Map<Integer, SubNode> subNodesMap = new TreeMap<>();
                 SubGraph(int rootId) {
                     newSubNode(rootId, new ArrayDeque<>());
+                }
+                OptionalInt minCycleMain() {
+                    return minCycleMain == null ?
+                        OptionalInt.empty() :
+                        OptionalInt.of(minCycleMain);
                 }
                 void newSubNode(int id, Deque<SubNode> rootPath) {
                     SubNode subNode = new SubNode(id, subNodesMap.size(), rootPath.peekLast());
                     subNodesMap.put(id, subNode);
+                    System.out.println("subNodesMap is " + subNodesMap);
                     rootPath.addLast(subNode);
                     int[] neighbourIDs = subNode.node.neighbours.stream()
                         .filter(neighbourId -> !visited.get(neighbourId))
                         .toArray();
+                    // TODO: detect and select minCycleCross
                     for (int neighbourId : neighbourIDs) {
                         SubNode backNode = subNodesMap.get(neighbourId);
-                        if (backNode != null) {
-                            subNode.addBackRef(backNode);
-                        } else {
+                        if (backNode == null) {
                             newSubNode(neighbourId, rootPath);
+                            continue;
                         }
+                        if (subNode.parent == backNode) {
+                            continue;
+                        }
+                        int cycleLen = pathLen(rootPath, backNode.rootPath());
+                        if (minCycleMain == null || minCycleMain > cycleLen) {
+                            minCycleMain = cycleLen;
+                        }
+                        System.out.printf("backNode: %s :: cycleLen = %d; minCycleMain = %d;%n",
+                            backNode, cycleLen, minCycleMain);
                     }
                     rootPath.removeLast();
                 }
                 int pathLen(Deque<SubNode> pathOne, Deque<SubNode> pathTwo) {
-                    int commonHeadLen = 0;
+                    System.out.printf("pathLen ( pathOne(%d)%s pathTwo(%d)%s )%n",
+                        pathOne.size(), pathOne, pathTwo.size(), pathTwo);
+                    SubNode lastCommon = null;
                     Iterator<SubNode> itOne = pathOne.iterator();
                     Iterator<SubNode> itTwo = pathTwo.iterator();
-                    while (itOne.hasNext() && itTwo.hasNext() && itOne.next() == itTwo.next()) {
-                        commonHeadLen++;
+                    while (itOne.hasNext() && itTwo.hasNext()) {
+                        SubNode subNodeOne = itOne.next();
+                        SubNode subNodeTwo = itTwo.next();
+                        if (subNodeOne != subNodeTwo) {
+                            break;
+                        }
+                        lastCommon = subNodeOne;
                     }
-                    if (commonHeadLen == 0) {
+                    if (lastCommon == null) {
                         throw new IllegalStateException(
                             "no common parts of root-path");
                     }
-                    return pathOne.size() + pathOne.size() - commonHeadLen;
+                    Deque<SubNode> cycle = new ArrayDeque<>();
+                    cycle.add(lastCommon);
+                    itOne.forEachRemaining(cycle::addLast);
+                    itTwo.forEachRemaining(cycle::addFirst);
+                    System.out.println("cycle --> " + cycle);
+                    return cycle.size();
                 }
                 @Override
                 public String toString() {
@@ -187,7 +203,7 @@ public interface Problem_2608__Shortest_Cycle_in_a_Graph {
                         .collect(Collectors.joining(
                             System.lineSeparator(),
                             String.format("~~~ sub-graph of %d nodes: ~~~%n", subNodesMap.size()),
-                            String.format("%n:: TODO: ... ::")
+                            String.format("%n:: minCycleMain: %d ::", minCycleMain)
                         ));
                 }
             }
