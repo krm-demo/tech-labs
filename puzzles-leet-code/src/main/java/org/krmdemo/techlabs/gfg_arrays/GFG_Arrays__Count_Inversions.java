@@ -18,7 +18,7 @@ import java.util.*;
  * 0 ≤ arr[i] ≤ 10^4
  * </pre>
  *
- * @see GFG_Arrays__Count_Smaller_Elements
+ * @see GFG_Arrays__Count_Min_Swaps_To_Sort
  */
 public interface GFG_Arrays__Count_Inversions {
 
@@ -26,8 +26,7 @@ public interface GFG_Arrays__Count_Inversions {
      * GFG-Solution entry-point
      *
      * @param arr an array containing positive integers
-     * @return an array <b><code>ans</code></b> where <code>ans[<b>i</b>]</code> denotes
-     *          the number of smaller elements on right side of <code>arr[<b>i</b>]</code>
+     * @return total number of <b>Inversion Count</b>
      */
     int inversionCount(int[] arr);
 
