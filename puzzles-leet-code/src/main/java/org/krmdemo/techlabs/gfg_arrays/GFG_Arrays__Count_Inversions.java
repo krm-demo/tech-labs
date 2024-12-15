@@ -18,6 +18,7 @@ import java.util.*;
  * 0 ≤ arr[i] ≤ 10^4
  * </pre>
  *
+ * @see GFG_Arrays__Merge_Sort
  * @see GFG_Arrays__Count_Min_Swaps_To_Sort
  */
 public interface GFG_Arrays__Count_Inversions {
