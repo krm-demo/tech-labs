@@ -65,6 +65,7 @@ public class TestCase_GFG_Arrays__Merge_No_Extra_Space {
         int flipIndex = 7;
         System.out.println("before --> " + sln.dumpFlipArr(arr, 0, arr.length, flipIndex));
         sln.flip(arr, 0, arr.length, flipIndex);
+        //noinspection ConstantValue
         System.out.println("after ---> " + sln.dumpFlipArr(arr, 0, arr.length, arr.length - flipIndex));
     }
 
@@ -75,5 +76,7 @@ public class TestCase_GFG_Arrays__Merge_No_Extra_Space {
         sln.mergeArrays(a, b);
         System.out.printf("result: a --> %s ; b --> %s ;%n",
             Arrays.toString(a), Arrays.toString(b));
+        assertThat(a).containsExactly( 2, 2, 3, 4 );
+        assertThat(b).containsExactly( 7, 10 );
     }
 }

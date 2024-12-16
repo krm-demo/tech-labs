@@ -54,13 +54,19 @@ public interface GFG_Arrays__Merge_No_Extra_Space {
                     ++count, dumpFlipArr(arr, left, right, flipIndex), flipIndex);
                 int valueLeftLast = arr[flipIndex - 1];
                 int valueRightFirst = arr[flipIndex];
-                int leftHead = BinarySearchUtils.countLess(arr, left, flipIndex, valueRightFirst);
-                int rightTail = BinarySearchUtils.countGreater(arr, flipIndex, right, valueLeftLast);
-                int valueLeftFirst = arr[left - leftHead];
+                int leftHead = BinarySearchUtils.countNotGreater(arr, left, flipIndex, valueRightFirst);
+                int rightTail = BinarySearchUtils.countNotLess(arr, flipIndex, right, valueLeftLast);
+                if (left + leftHead >= flipIndex || right - rightTail <= flipIndex) {
+                    System.out.printf("- left(%d) + leftHead(%d) = %d;%n", left, leftHead, left + leftHead);
+                    System.out.printf("- right(%d) - rightTail(%d) = %d;%n", right, rightTail, right - rightTail);
+                    System.out.printf("- flipIndex = %d :: end of flip-merge !!!%n", flipIndex);
+                    break;
+                }
+                int valueLeftFirst = arr[left + leftHead];
                 int valueRightLast = arr[right - 1 - rightTail];
                 int leftTail = BinarySearchUtils.countGreater(arr, left + leftHead, flipIndex, valueRightLast);
                 int rightHead = BinarySearchUtils.countLess(arr, flipIndex, right - rightTail, valueLeftFirst);
-                System.out.printf("-  valueLeftFirst = %-2d,  valueLeftLast = %-2d;%n", valueLeftFirst, valueLeftLast);
+                System.out.printf("- valueLeftFirst = %-2d, valueLeftLast = %-2d;%n", valueLeftFirst, valueLeftLast);
                 System.out.printf("- valueRightFirst = %-2d, valueRightLast = %-2d;%n", valueRightFirst, valueRightLast);
                 System.out.printf("- left { head: %d, mid: %d, tail: %d }%n",
                     leftHead, flipIndex - left - leftHead - leftTail, leftTail);
@@ -85,9 +91,6 @@ public interface GFG_Arrays__Merge_No_Extra_Space {
                     count, dumpFlipArr(arr, left, right, flipIndex), flipIndex);
                 left += leftHead;
                 right -= rightTail;
-                if (count > 3) {
-                    break;
-                }
             }
         }
 
