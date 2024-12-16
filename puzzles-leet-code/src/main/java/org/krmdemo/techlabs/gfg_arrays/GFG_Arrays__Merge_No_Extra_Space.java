@@ -49,8 +49,10 @@ public interface GFG_Arrays__Merge_No_Extra_Space {
 
         public void flipMerge(int[] arr, int left, int right, int flipIndex) {
             int count = 0;
+            int initialLeft = left;
+            int initialRight = right;
             while (left < flipIndex && flipIndex < right) {
-                System.out.printf("%2d) before --> %s; flipIndex = %d;%n",
+                System.out.printf("[count = %d] --> %s; flipIndex = %d;%n",
                     ++count, dumpFlipArr(arr, left, right, flipIndex), flipIndex);
                 int valueLeftLast = arr[flipIndex - 1];
                 int valueRightFirst = arr[flipIndex];
@@ -82,16 +84,20 @@ public interface GFG_Arrays__Merge_No_Extra_Space {
                     flipIndex - leftTail + rightHead, flipIndex + rightHead, right - rightTail, right));
                 // { lH, lM, rH, lT, rM, rT } --> { lH, rH, lM, lT, rM, rT }
                 flip(arr, left + leftHead, flipIndex - leftTail + rightHead, flipIndex - leftTail);
+                System.out.printf("- (2) %s; %n", dumpFlipParts(arr,
+                    left, left + leftHead, left + leftHead + rightHead,
+                    flipIndex - leftTail + rightHead, flipIndex + rightHead, right - rightTail, right));
                 // { lH, rH, lM, lT, rM, rT } --> { lH, rH, lM, rM, lT, rT }
                 flip(arr, flipIndex - leftTail + rightHead, right - rightTail, flipIndex + rightHead);
-                // ... flipIndex = left + leftHead + rightHead + (flipIndex - left - leftHead - leftTail);
-                // ... flipIndex = right - rightTail - leftTail - (right - flipIndex - rightHead - rightTail);
-                flipIndex = flipIndex + rightHead - leftTail;
-                System.out.printf("%2d) after ---> %s; flipIndex = %d;%n",
-                    count, dumpFlipArr(arr, left, right, flipIndex), flipIndex);
+                System.out.printf("- (3) %s; %n", dumpFlipParts(arr,
+                    left, left + leftHead, left + leftHead + rightHead,
+                    flipIndex - leftTail + rightHead, right - leftTail - rightTail, right - rightTail, right));
+                flipIndex += rightHead - leftTail;
                 left += leftHead;
                 right -= rightTail;
             }
+            System.out.printf("finally [count = %d] --> %s; flipIndex = %d;%n",
+                count, dumpFlipArr(arr, initialLeft, initialRight, flipIndex), flipIndex);
         }
 
         @Override
@@ -120,7 +126,7 @@ public interface GFG_Arrays__Merge_No_Extra_Space {
                 .mapToObj(i -> i == flipIndex ? "(" + arr[i] +")" : "" + arr[i])
                 .collect(Collectors.joining(",",
                     String.format("{ #%d :: ", left),
-                    String.format(" :: #%d }", right)
+                    String.format(" :: #%s }", flipIndex == right ? "(" + right + ")" : "" + right)
                     ));
         }
 
@@ -134,7 +140,7 @@ public interface GFG_Arrays__Merge_No_Extra_Space {
             String rightPart = IntStream.range(3, 6)
                 .mapToObj(i -> dumpSubArray(arr, indexes[i], indexes[i+1]))
                 .collect(Collectors.joining("|"));
-            return "...:" + leftPart + ":" + rightPart + ":...";
+            return "...:" + leftPart + "::" + rightPart + ":...";
         }
 
         private String dumpSubArray(int[] arr, int left, int right) {
