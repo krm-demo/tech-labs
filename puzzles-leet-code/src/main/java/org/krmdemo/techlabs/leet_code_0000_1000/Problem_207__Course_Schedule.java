@@ -40,27 +40,43 @@ public interface Problem_207__Course_Schedule {
     boolean canFinish(int numCourses, int[][] prerequisites);
 
     enum Solution implements Problem_207__Course_Schedule {
-        DEFAULT;  // <-- one by one topological deletion is not efficient - TODO: try to delete the whole level
+        /**
+         * This version of topology-sort uses {@link TreeSet}
+         * <hr>
+         * one-by-one topological deletion is not efficient (Leet-Code results in 168ms and 5.11% beats)
+         */
+        TOPOLOGY_SORT_TREE_SET {
+            @Override
+            public boolean canFinish(int numCourses, int[][] prerequisites) {
+                if (numCourses <= 0) {
+                    throw new IllegalArgumentException(
+                        "number of courses must be positive, but it equals to " + numCourses);
+                }
+                CoursesGraph coursesGraph = new CoursesGraph(numCourses);
+                coursesGraph.addEdgesArr(prerequisites);
+                System.out.println("before topological sort:");
+                System.out.println(coursesGraph);
+                while (coursesGraph.hasFirstToRemove()) {
+                    coursesGraph.removeFirst();
+                }
+                System.out.println("after topological sort:");
+                System.out.println(coursesGraph);
+                System.out.println("returning " + coursesGraph.isEmpty());
+                System.out.println("===================================");
+                return coursesGraph.isEmpty();
+            }
 
-        @Override
-        public boolean canFinish(int numCourses, int[][] prerequisites) {
-            if (numCourses <= 0) {
-                throw new IllegalArgumentException(
-                    "number of courses must be positive, but it equals to " + numCourses);
+        },
+        /**
+         * This version of topology-sort uses counting-map
+         * @see org.krmdemo.techlabs.utils.CountingUtils
+         */
+        TOPOLOGY_SORT_COUNTING_MAP {
+            @Override
+            public boolean canFinish(int numCourses, int[][] prerequisites) {
+                return false; // TODO: to be done
             }
-            CoursesGraph coursesGraph = new CoursesGraph(numCourses);
-            coursesGraph.addEdgesArr(prerequisites);
-            System.out.println("before topological sort:");
-            System.out.println(coursesGraph);
-            while (coursesGraph.hasFirstToRemove()) {
-                coursesGraph.removeFirst();
-            }
-            System.out.println("after topological sort:");
-            System.out.println(coursesGraph);
-            System.out.println("returning " + coursesGraph.isEmpty());
-            System.out.println("===================================");
-            return coursesGraph.isEmpty();
-        }
+        };
 
         private static class CoursesGraph {
             private final Node[] nodes;

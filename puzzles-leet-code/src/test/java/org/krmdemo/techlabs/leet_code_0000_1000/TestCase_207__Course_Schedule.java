@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 public class TestCase_207__Course_Schedule {
 
     private final Problem_207__Course_Schedule sln =
-        Problem_207__Course_Schedule.Solution.DEFAULT;
+        Problem_207__Course_Schedule.Solution.TOPOLOGY_SORT_TREE_SET;
 
     @Test
     void test_ex_01() {
