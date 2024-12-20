@@ -20,4 +20,9 @@ public class TestCase_198__House_Robber {
     void test_ex_02() {
         assertThat(sln.rob(new int[] { 2,7,9,3,1 })).isEqualTo(12);
     }
+
+    @Test
+    void test_II_ex_03() {
+        assertThat(sln.rob(new int[] { 1,2,3 })).isEqualTo(4);  // <-- for "House Robber II" the answer is "3"
+    }
 }
