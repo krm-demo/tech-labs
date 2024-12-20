@@ -80,8 +80,8 @@ public interface Problem_207__Course_Schedule {
                     Node nodeAfter = node(pair[1]);
                     topologicalSet.remove(nodeBefore);
                     topologicalSet.remove(nodeAfter);
-                    nodeBefore.after.set(nodeAfter.id());
-                    nodeAfter.before.set(nodeBefore.id());
+                    nodeBefore.after.add(nodeAfter.id());
+                    nodeAfter.before.add(nodeBefore.id());
                     topologicalSet.add(nodeBefore);
                     topologicalSet.add(nodeAfter);
                 }
@@ -104,18 +104,18 @@ public interface Problem_207__Course_Schedule {
                     BitSet nodesToUpdate = new BitSet();
                     nodeToRemove.before.stream()
                         .filter(id -> id != idToRemove)
-                        .mapToObj(this::node)
+                        .map(this::node)
                         .forEach(nodeBefore -> {
                             topologicalSet.remove(nodeBefore);
-                            nodeBefore.after.clear(idToRemove);
+                            nodeBefore.after.remove(idToRemove);
                             nodesToUpdate.set(nodeBefore.id);
                         });
                     nodeToRemove.after.stream()
                         .filter(id -> id != idToRemove)
-                        .mapToObj(this::node)
+                        .map(this::node)
                         .forEach(nodeAfter -> {
                             topologicalSet.remove(nodeAfter);
-                            nodeAfter.before.clear(idToRemove);
+                            nodeAfter.before.remove(idToRemove);
                             nodesToUpdate.set(nodeAfter.id);
                         });
                     nodesToUpdate.stream()
@@ -136,6 +136,8 @@ public interface Problem_207__Course_Schedule {
         /**
          * This version of topology-sort uses counting-map
          * @see org.krmdemo.techlabs.utils.CountingUtils
+         * <hr>
+         * keeping two kind of edges is also not efficient (Leet-Code results in 22ms and 8.79% beats)
          */
         TOPOLOGY_SORT_COUNTING_MAP {
             @Override
@@ -171,8 +173,8 @@ public interface Problem_207__Course_Schedule {
                     Node nodeFrom = node(idNodeFrom);
                     Node nodeTo = node(idNodeTo);
                     topoLevelDel(idNodeTo);
-                    nodeFrom.after.set(idNodeTo);
-                    nodeTo.before.set(idNodeFrom);
+                    nodeFrom.after.add(idNodeTo);
+                    nodeTo.before.add(idNodeFrom);
                     topoLevelAdd(idNodeTo);
                     topoLevelAdd(idNodeFrom);
                 }
@@ -180,8 +182,8 @@ public interface Problem_207__Course_Schedule {
                     Node nodeFrom = node(idNodeFrom);
                     Node nodeTo = node(idNodeTo);
                     topoLevelDel(idNodeTo);
-                    nodeFrom.after.clear(idNodeTo);
-                    nodeTo.before.clear(idNodeFrom);
+                    nodeFrom.after.remove(idNodeTo);
+                    nodeTo.before.remove(idNodeFrom);
                     topoLevelAdd(idNodeTo);
                 }
 
@@ -199,10 +201,10 @@ public interface Problem_207__Course_Schedule {
                 private void removeNode(int idToRemove) {
                     topoLevelDel(idToRemove);
                     Node nodeToRemove = node(idToRemove);
-                    nodeToRemove.before.stream().forEach(
+                    nodeToRemove.before.stream().toList().forEach(
                         idNodeFrom -> this.removeEdge(idNodeFrom, idToRemove)
                     );
-                    nodeToRemove.after.stream().forEach(
+                    nodeToRemove.after.stream().toList().forEach(
                         idNodeTo-> this.removeEdge(idToRemove, idNodeTo)
                     );
                     nodes[idToRemove] = null;
@@ -210,7 +212,6 @@ public interface Problem_207__Course_Schedule {
                 }
                 @Override
                 protected String dumpTopology() {
-
                     return topoCntMap.toString();
                 }
             }
@@ -244,12 +245,12 @@ public interface Problem_207__Course_Schedule {
         }
 
         static abstract class CoursesGraphBase implements CoursesGraph {
-            record Node (int id, BitSet before, BitSet after) {
+            record Node (int id, Set<Integer> before, Set<Integer> after) {
                 Node(int id) {
-                    this(id, new BitSet(), new BitSet());
+                    this(id, new HashSet<>(), new HashSet<>());
                 }
                 int countBefore() {
-                    return before.cardinality();
+                    return before.size();
                 }
                 boolean hasBefore() {
                     return countBefore() == 0;
@@ -291,6 +292,5 @@ public interface Problem_207__Course_Schedule {
             }
             protected abstract String dumpTopology();
         }
-
     }
 }
