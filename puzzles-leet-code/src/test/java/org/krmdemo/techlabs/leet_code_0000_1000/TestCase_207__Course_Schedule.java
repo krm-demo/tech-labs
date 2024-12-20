@@ -1,6 +1,8 @@
 package org.krmdemo.techlabs.leet_code_0000_1000;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -13,23 +15,23 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  */
 public class TestCase_207__Course_Schedule {
 
-    private final Problem_207__Course_Schedule sln =
-        Problem_207__Course_Schedule.Solution.TOPOLOGY_SORT_TREE_SET;
-
-    @Test
-    void test_ex_01() {
+    @EnumSource
+    @ParameterizedTest
+    void test_ex_01(Problem_207__Course_Schedule.Solution sln) {
         int[][] prerequisites = new int[][] { { 1, 0 } };
         assertThat(sln.canFinish(2, prerequisites)).isTrue();
     }
 
-    @Test
-    void test_ex_02() {
+    @EnumSource
+    @ParameterizedTest
+    void test_ex_02(Problem_207__Course_Schedule.Solution sln) {
         int[][] prerequisites = new int[][] { { 1, 0 }, { 0, 1 } };
         assertThat(sln.canFinish(2, prerequisites)).isFalse();
     }
 
-    @Test
-    void test_no_edges() {
+    @EnumSource
+    @ParameterizedTest
+    void test_no_edges(Problem_207__Course_Schedule.Solution sln) {
         assertThat(sln.canFinish(2, null)).isTrue();
         assertThat(sln.canFinish(2, new int[][]{})).isTrue();
         assertThatIllegalArgumentException().isThrownBy(
@@ -37,8 +39,9 @@ public class TestCase_207__Course_Schedule {
         ).withMessageContaining("must be positive");
     }
 
-    @Test
-    void test_edges_tree() {
+    @EnumSource
+    @ParameterizedTest
+    void test_edges_tree(Problem_207__Course_Schedule.Solution sln) {
         int[][] prerequisites = new int[][] {
             { 0, 1 }, { 0, 2 }, { 0, 3 },
             { 1, 10 }, { 1, 11 }, { 1, 12 },
@@ -56,8 +59,9 @@ public class TestCase_207__Course_Schedule {
         assertThat(sln.canFinish(34, prerequisites)).isFalse();
     }
 
-    @Test
-    void test_diamond_levels() {
+    @EnumSource
+    @ParameterizedTest
+    void test_diamond_levels(Problem_207__Course_Schedule.Solution sln) {
         int[][] prerequisites = new int[][] {
             { 0, 1 }, { 0, 2 }, { 0, 3 },
             { 1, 11 }, { 1, 12 }, { 1, 13 },
