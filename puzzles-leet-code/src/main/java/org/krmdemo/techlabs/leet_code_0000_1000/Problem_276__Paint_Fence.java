@@ -27,6 +27,9 @@ public interface Problem_276__Paint_Fence {
      */
     int numWays(int n, int k);
 
+    /**
+     * TODO: implement either Lucas-formula or matrix-power solution
+     */
     enum Solution implements Problem_276__Paint_Fence {
         DP_BOTTOM_UP {
             public int numWays(int n, int k) {
