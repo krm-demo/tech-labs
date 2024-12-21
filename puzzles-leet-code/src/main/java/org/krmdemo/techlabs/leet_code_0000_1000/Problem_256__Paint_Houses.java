@@ -58,6 +58,44 @@ public interface Problem_256__Paint_Houses {
     }
 
     enum Solution implements Problem_256__Paint_Houses {
+        DP_BOTTOM_UP_MATRIX {
+            @Override
+            public int minCost(int[][] costs) {
+                Deque<EnumMap<Color,Integer>> paintedHouses = new ArrayDeque<>();
+                for (EnumMap<Color,Integer> paintCost : colorMapList(costs)) {
+                    EnumMap<Color,Integer> currCost = newColorMap();
+                    EnumMap<Color,Integer> prevCost = paintedHouses.peekLast();
+                    for (Color color : Color.values()) {
+                        int minCostPrev = prevCost == null ? 0 : prevCost.entrySet().stream()
+                            .filter(e -> e.getKey() != color)
+                            .min(CMP_COLOR_COST).orElseThrow().getValue();
+                        currCost.put(color, minCostPrev + paintCost.get(color));
+                    }
+                    paintedHouses.addLast(currCost);
+                }
+                EnumMap<Color,Integer> lastCost = paintedHouses.peekLast();
+                return lastCost == null ? 0 : lastCost.entrySet().stream()
+                    .min(CMP_COLOR_COST).orElseThrow().getValue();
+            }
+        },
+        DP_BOTTOM_UP_LAST_ROW {
+            @Override
+            public int minCost(int[][] costs) {
+                EnumMap<Color,Integer> prevCost = null;
+                for (EnumMap<Color,Integer> paintCost : colorMapList(costs)) {
+                    EnumMap<Color,Integer> currCost = newColorMap();
+                    for (Color color : Color.values()) {
+                        int minCostPrev = prevCost == null ? 0 : prevCost.entrySet().stream()
+                            .filter(e -> e.getKey() != color)
+                            .min(CMP_COLOR_COST).orElseThrow().getValue();
+                        currCost.put(color, minCostPrev + paintCost.get(color));
+                    }
+                    prevCost = currCost;
+                }
+                return prevCost == null ? 0 : prevCost.entrySet().stream()
+                    .min(CMP_COLOR_COST).orElseThrow().getValue();
+            }
+        },
         DP_TOP_DOWN {
             @Override
             public int minCost(int[][] costs) {
@@ -73,7 +111,7 @@ public interface Problem_256__Paint_Houses {
             }
         };
 
-        final Comparator<Map.Entry<Color,Integer>> MIN_COLOR_COST =
+        final Comparator<Map.Entry<Color,Integer>> CMP_COLOR_COST =
             Comparator.comparingInt(Map.Entry::getValue);
 
         class CostCalculator {
@@ -96,7 +134,7 @@ public interface Problem_256__Paint_Houses {
                     currColorMap.put(color, cost + minCostSince(color, houseNum + 1));
                 });
                 Map.Entry<Color, Integer> minColorCost =
-                    currColorMap.entrySet().stream().min(MIN_COLOR_COST).orElseThrow();
+                    currColorMap.entrySet().stream().min(CMP_COLOR_COST).orElseThrow();
 //                System.out.printf("prevColor = %5s, houseNum = %d --> %s;%n", prevColor, houseNum, minColorCost);
                 return minColorCost.getValue();
             }
