@@ -229,7 +229,6 @@ public class NumberUtils {
         return fastFibo(BigInteger.valueOf(n));
     }
     public static BigInteger fastFibo(BigInteger N) {
-        MatrixUtils.M2 fiboM = MatrixUtils.matrix2(1, 1, 1, 0);
         return fastFiboM2(N).a12;
     }
     public static MatrixUtils.M2 fastFiboM2(BigInteger N) {

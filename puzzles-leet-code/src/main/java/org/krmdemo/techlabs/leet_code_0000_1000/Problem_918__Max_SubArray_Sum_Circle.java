@@ -118,7 +118,7 @@ public interface Problem_918__Max_SubArray_Sum_Circle {
         /**
          * In this approach we calculate minimum and maximum sub-array's sums
          * using a regular (classic) Kadane's algorithm.
-         * @see {@link Problem_053__Max_SubArray_Sum.Solution#KADANE_CLASSIC}
+         * @see Problem_053__Max_SubArray_Sum.Solution#KADANE_CLASSIC
          */
         DOUBLE_KADANE_CLASSIC {
             public int maxSubarraySumCircular(int[] nums) {
@@ -147,7 +147,7 @@ public interface Problem_918__Max_SubArray_Sum_Circle {
 
                 int maxSumCircle = totalSum == minCurrSum ? maxCurrSum :
                     Math.max(maxCurrSum, totalSum - minCurrSum);
-                int minSumCircle = totalSum == maxCurrSum? minCurrSum :
+                int minSumCircle = totalSum == maxCurrSum ? minCurrSum :
                     Math.min(minCurrSum, totalSum - maxCurrSum);
                 System.out.println("minSumCircle = " + minSumCircle);
                 System.out.println("maxSumCircle = " + maxSumCircle);
