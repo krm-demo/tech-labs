@@ -9,8 +9,8 @@ import java.util.stream.Stream;
  * </a></h3>
  * You are given an integer array <b><code>nums</code></b> and an integer <b><code>K</code></b>.
  * Find the maximum sub-array sum of all the sub-arrays of <code>nums</code> that meet the following conditions:<ul>
- * <li>The length of the subarray is <code>K</code></li>
- * <li>All the elements of the subarray are distinct.</li>
+ * <li>The length of the sub-array is <code>K</code></li>
+ * <li>All the elements of the sub-array are distinct.</li>
  * </ul>
  * Return the maximum sub-array sum of all the sub-arrays that meet the conditions.
  * If no sub-array meets the conditions, return <b><code>0</code></b>.
