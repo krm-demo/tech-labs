@@ -9,12 +9,11 @@ import static java.util.stream.IntStream.range;
  * <h3><a href="https://leetcode.com/problems/graph-valid-tree/">
  *     261. Graph Valid Tree
  * </a></h3>
- * You have a graph of <b><code>N</code></b> nodes labeled from <code>0</code> to <code>N-1</code>.
- * You are given an integer <b><code>N</code></b> and a list of <b><code>edges</code></b>
- * where <code>edges[<b>i</b>] = [a<b>i</b>, b<b>i</b>]</code> indicates
- * that there is an undirected edge between nodes <code>a<b>i</b></code> and <code>b<b>i</b></code> in the graph.
+ * You have a graph of <b><code>N</code></b> nodes. You are given an integer <b><code>n</code></b>
+ * and an array <b><code>edges</code></b> where <code>edges[<b>i</b>] = [a<b>i</b>, b<b>i</b>]</code> indicates
+ * that there is an edge between <code>a<b>i</b></code> and <code>b<b>i</b></code> in the graph.
  * <hr/>
- * Return <code>true</code> if the edges of the given graph make up a valid tree, and <code>false</code> otherwise.
+ * Return the number of connected components in the graph.
  * <h5>Constraints:</h5><pre>
  *        1 <= n <= 2000
  * 0 <= edges.length <= 5000
@@ -26,48 +25,31 @@ import static java.util.stream.IntStream.range;
  *
  * @see Problem_547__Number_of_Provinces
  * @see Problem_200__Number_of_Islands
- * @see Problem_323__Number_of_Connected_SubGraphs
+ * @see Problem_261__Graph_Valid_Tree
  * @see <a href="https://www.geeksforgeeks.org/introduction-to-disjoint-set-data-structure-or-union-find-algorithm/">
  *     Introduction to Disjoint Set (Union-Find Algorithm)
  * </a>
  */
-public interface Problem_261__Graph_Valid_Tree {
+public interface Problem_323__Number_of_Connected_SubGraphs {
 
     /**
      * Solution entry-point.
      *
      * @param N the number of nodes in a graph
      * @param edges the array of un-directed edges
-     * @return <code>true</code> if the edges of the given graph make up a valid tree, and <code>false</code> otherwise
+     * @return the number of connected components in the graph
      */
-    boolean validTree(int N, int[][] edges);
+    int countComponents(int N, int[][] edges);
 
-    enum Solution implements Problem_261__Graph_Valid_Tree {
+    enum Solution implements Problem_323__Number_of_Connected_SubGraphs {
         DEFAULT;
 
         @Override
-        public boolean validTree(int N, int[][] edgesArr) {
+        public int countComponents(int N, int[][] edgesArr) {
             DSU dsu = new DSU(N);
-            for (int[] edge : edgesArr) {
-                if (dsu.union(edge)) {
-                    // extra edge means that a given graph is not a tree
-                    System.out.println("DSU --> " + dsu);
-                    System.out.println("extra edge is found - " + dumpEdge(edge));
-                    System.out.printf("DSU-parent(%d) = %d; DSU-parent(%d) = %d;%n",
-                        edge[0], dsu.find(edge[0] + 1),
-                        edge[1], dsu.find(edge[1] + 1)
-                    );
-                    return false;
-                }
-            }
+            Arrays.stream(edgesArr).forEach(dsu::union);
             System.out.println("DSU --> " + dsu);
-            return dsu.countRoots() == 1;  // <-- valid tree must have one and only one DSU-root
-        }
-
-        static String dumpEdge(int[] pair) {
-            int high = Math.max(pair[0], pair[1]);
-            int low = Math.min(pair[0], pair[1]);
-            return String.format("(%d <-> %d)", low, high);
+            return dsu.countRoots();
         }
     }
 
@@ -110,9 +92,8 @@ public interface Problem_261__Graph_Valid_Tree {
          * <b>Union</b>-part of DSU algorithm
          *
          * @param edge a pair of nodes to connect with un-directed edge
-         * @return <code>true</code> if passed nodes already have the same parent
          */
-        boolean union(int[] edge) {
+        void union(int[] edge) {
             if (edge == null || edge.length != 2) {
                 throw new IllegalArgumentException("invalid edge: " + Arrays.toString(edge));
             }
@@ -122,19 +103,16 @@ public interface Problem_261__Graph_Valid_Tree {
             int parentOne = find(edge[0] + 1);
             int parentTwo = find(edge[1] + 1);
             if (parentOne == parentTwo) {
-                // attempt to provide an extra edge between already connected nodes
-                return true;
+                return;
+            }
+            int sizeOne = -parents[parentOne];
+            int sizeTwo = -parents[parentTwo];
+            if (parentOne < parentTwo) { // <-- this strategy makes the lowest node to be a DSU-head
+                parents[parentOne] = -(sizeOne + sizeTwo);
+                parents[parentTwo] = parentOne;
             } else {
-                int sizeOne = -parents[parentOne];
-                int sizeTwo = -parents[parentTwo];
-                if (parentOne < parentTwo) { // <-- this strategy makes the lowest node to be a DSU-head (DSU-root)
-                    parents[parentOne] = -(sizeOne + sizeTwo);
-                    parents[parentTwo] = parentOne;
-                } else {
-                    parents[parentOne] = parentTwo;
-                    parents[parentTwo] = -(sizeOne + sizeTwo);
-                }
-                return false;
+                parents[parentOne] = parentTwo;
+                parents[parentTwo] = -(sizeOne + sizeTwo);
             }
         }
 
