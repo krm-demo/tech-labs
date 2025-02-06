@@ -26,6 +26,8 @@ import static java.util.stream.IntStream.range;
  * @see Problem_547__Number_of_Provinces
  * @see Problem_200__Number_of_Islands
  * @see Problem_261__Graph_Valid_Tree
+ * @see org.krmdemo.techlabs.leet_code_1000_2000.Problem_1584__Min_Cost_to_Connect_All_Points.Solution#KRUSKAL_DSU
+ *     1584. Min Cost to Connect All Points (Kruskal’s MST)
  * @see <a href="https://www.geeksforgeeks.org/introduction-to-disjoint-set-data-structure-or-union-find-algorithm/">
  *     Introduction to Disjoint Set (Union-Find Algorithm)
  * </a>
