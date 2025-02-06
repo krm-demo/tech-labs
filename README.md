@@ -9,3 +9,7 @@ Source of utilities, puzzles and templates
 ### Geeks-For-Geeks puzzles:
 - puzzles for arrays
 - puzzles for strings
+
+## Utilities and Sandbox
+- java-classes
+- bash-scripts
