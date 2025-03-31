@@ -1,5 +1,7 @@
 package org.krmdemo.techlabs.gfg_arrays;
 
+import org.krmdemo.techlabs.interview.meta.FB_Prep_HashMaps__PairSum;
+
 import java.util.*;
 
 /**
@@ -7,13 +9,15 @@ import java.util.*;
  *     Count pairs with given sum
  * </a></h3>
  * Given an array <b><code>arr[]</code></b> and an integer <b><code>target</code></b>.
- * You have to find numbers of pairs in array <b><code>arr[]</code></b>
+ * You have to find the number of pairs in array <b><code>arr[]</code></b>
  * which sums up to given <b><code>target</code></b>.
  * <h5>Constraints:</h5><pre>
  * 1 ≤ arr.size() ≤ 10^5
  * -10^4 ≤ arr[i] ≤ 10^4
  *   1 ≤ target ≤ 10^4
  * </pre>
+ *
+ * @see FB_Prep_HashMaps__PairSum
  */
 public interface GFG_Arrays__Count_Pairs_With_Given_Sum {
 
@@ -21,7 +25,8 @@ public interface GFG_Arrays__Count_Pairs_With_Given_Sum {
      * GFG-Solution entry-point
      *
      * @param arr an array containing positive integers
-     * @return minimum number of swaps required to sort the array in strictly increasing order
+     * @return the number of pairs in array <b><code>arr[]</code></b>,
+     *         which sums up to given <b><code>target</code></b>
      */
     int countPairs(int[] arr, int target);
 
