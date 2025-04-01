@@ -28,11 +28,17 @@ public interface FB_Prep_Arrays__Reverse_SubArr_To_Make_Equal {
     boolean areTheyEqual(int[] A, int[] B);
 
     /**
-     * The default implementation is based on <b><code>counting-map</code></b>.
-     * If the frequencies of values in both arrays are the same - it's always possible
-     * to re-arrange elements in one element to make both arrays equal.
-     * <hr/>
-     *
+     * All implementations are based on fact, that two different elements in array
+     * could ALWAYS be swapped by one or two reversions of sub-arrays. In other words, if we want to swap
+     * the element with index <code>i</code> and element with index <code>j</code>:<ol>
+     *     <li>if <code>|i - j| <= 2</code> - just reverse the sub-barry <code>[i, j]</code></li>
+     *     <li>if <code>|i - j| > 2 </code> and <code>i > j</code>
+     *     - first reverse the sub-barry <code>[i, j]</code>
+     *     and then reverse the sub-array <code>[i+1, j-1]</code></li>
+     * </ol>
+     * So, if <i>counting-map</i>s of two arrays are the same - it always possible
+     * to re-arrange (multiple subsequent swapping) elements to make both arrays equal,
+     * and thus the same could be achieved by multiple reversions of sub-arrays.
      */
     enum Solution implements FB_Prep_Arrays__Reverse_SubArr_To_Make_Equal {
         SORTING {
