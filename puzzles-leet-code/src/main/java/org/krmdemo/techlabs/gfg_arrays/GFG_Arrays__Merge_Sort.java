@@ -3,7 +3,7 @@ package org.krmdemo.techlabs.gfg_arrays;
 import java.util.*;
 
 /**
- * <h3><a href="https://www.geeksforgeeks.org/problems/overlapping-intervals--170633/1">
+ * <h3><a href="https://www.geeksforgeeks.org/problems/UNKNOWN-LINK">
  *     Merge Sort
  * </a></h3>
  * Given an array <b><code>arr[]</code></b>, its starting position <b><code>left</code></b>
@@ -12,8 +12,6 @@ import java.util.*;
  * 1 ≤ arr.size() ≤ 10^5
  * 1 ≤ arr[i] ≤ 10^5
  * </pre>
- *
- * @see GFG_Arrays__Count_Inversions
  */
 public interface GFG_Arrays__Merge_Sort {
 

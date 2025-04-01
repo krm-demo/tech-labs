@@ -1,6 +1,6 @@
 package org.krmdemo.techlabs.gfg_arrays;
 
-import org.krmdemo.techlabs.interview.meta.FB_Prep_HashMaps__PairSum;
+import org.krmdemo.techlabs.interview.meta.FB_Prep_HashMaps__PairSums_Count;
 
 import java.util.*;
 
@@ -17,7 +17,7 @@ import java.util.*;
  *   1 ≤ target ≤ 10^4
  * </pre>
  *
- * @see FB_Prep_HashMaps__PairSum
+ * @see FB_Prep_HashMaps__PairSums_Count
  */
 public interface GFG_Arrays__Count_Pairs_With_Given_Sum {
 
@@ -37,14 +37,11 @@ public interface GFG_Arrays__Count_Pairs_With_Given_Sum {
         BRUTE_FORCE {
             @Override
             public int countPairs(int[] arr, int target) {
-//                System.out.printf("arr.length = %d; target = %d:%n", arr.length, target);
                 int count = 0;
                 for (int i = 0; i < arr.length - 1; i++) {
                     for (int j = i + 1; j < arr.length; j++) {
                         if (arr[i] + arr[j] == target) {
                             count++;
-//                            System.out.printf("%2d) arr[%d] = %d, arr[%d] = %d;%n",
-//                                count, i, arr[i], j, arr[j]);
                         }
                     }
                 }
@@ -52,10 +49,11 @@ public interface GFG_Arrays__Count_Pairs_With_Given_Sum {
             }
         },
         /**
-         * Unlike the <b>counting-map</b> solution here, one of more compact and less straight-forward
-         * is based on calculating the count on constructing the counting-map (see editorial)
+         * <b>counting-map</b> solution here has linear time-complexity, because it does not use sorting,
+         * but just multiply the counts of values that conform the target pair-sum
+         * (the value for half of target pair-sum is handled separately).
          */
-        COUNTING_MAP {
+        COUNTING_MAP_EX {
             @Override
             public int countPairs(int[] arr, int target) {
                 // System.out.println("target = " + target);

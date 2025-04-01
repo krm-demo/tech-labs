@@ -10,7 +10,7 @@ import java.util.*;
  * where each element <code>arr[<b>i</b>]</code> represents the number of pages in the <b>i</b>th book.
  * You also have an integer <b><code>k</code></b> representing the number of students.
  * The task is to allocate books to each student such that:<ul>
- *     <li>Each student receives atleast one book</li>
+ *     <li>Each student receives at least one book</li>
  *     <li>Each student is assigned a contiguous sequence of books</li>
  *     <li>No book is assigned to more than one student</li>
  * </ul>
