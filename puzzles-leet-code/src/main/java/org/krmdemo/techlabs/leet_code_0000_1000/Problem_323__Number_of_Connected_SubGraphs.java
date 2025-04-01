@@ -6,8 +6,8 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.IntStream.range;
 
 /**
- * <h3><a href="https://leetcode.com/problems/graph-valid-tree/">
- *     261. Graph Valid Tree
+ * <h3><a href="https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/description/">
+ *     323. Number of Connected Components in an Undirected Graph
  * </a></h3>
  * You have a graph of <b><code>N</code></b> nodes. You are given an integer <b><code>n</code></b>
  * and an array <b><code>edges</code></b> where <code>edges[<b>i</b>] = [a<b>i</b>, b<b>i</b>]</code> indicates
@@ -28,6 +28,7 @@ import static java.util.stream.IntStream.range;
  * @see Problem_261__Graph_Valid_Tree
  * @see org.krmdemo.techlabs.leet_code_1000_2000.Problem_1584__Min_Cost_to_Connect_All_Points.Solution#KRUSKAL_DSU
  *     1584. Min Cost to Connect All Points (Kruskal’s MST)
+ * @see org.krmdemo.techlabs.interview.meta.FB_Prep_Arrays__Passing_YearBooks (size of each parent group: FB)
  * @see <a href="https://www.geeksforgeeks.org/introduction-to-disjoint-set-data-structure-or-union-find-algorithm/">
  *     Introduction to Disjoint Set (Union-Find Algorithm)
  * </a>
