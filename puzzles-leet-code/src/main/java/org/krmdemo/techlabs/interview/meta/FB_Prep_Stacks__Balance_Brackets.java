@@ -26,6 +26,8 @@ import java.util.*;
 public interface FB_Prep_Stacks__Balance_Brackets {
 
     /**
+     * Solution entry-point.
+     *
      * @param s a string of brackets
      * @return  <b><code>true</code></b> if a string is balanced, otherwise - <b><code>false</code></b>
      */

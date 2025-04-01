@@ -35,6 +35,8 @@ import java.util.stream.Stream;
 public interface FB_Prep_Arrays__Passing_YearBooks {
 
     /**
+     * Solution entry-point.
+     *
      * @param arr the value by the index <code>i</code> is the index of the student to pass the year-book next
      * @return an array with number of signatures each user has in its year-book finally
      *          (after all year-books will be returned back)

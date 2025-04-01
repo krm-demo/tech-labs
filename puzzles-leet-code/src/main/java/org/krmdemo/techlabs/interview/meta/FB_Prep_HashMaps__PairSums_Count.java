@@ -24,6 +24,8 @@ import static java.util.stream.Collectors.groupingBy;
 public interface FB_Prep_HashMaps__PairSums_Count {
 
     /**
+     * Solution entry-point.
+     *
      * @param arr an array of integers in the range <code>[1, 1,000,000,000]</code>;
      *            the length of array is in range <code>[1, 100,000]</code>
      * @param K - target sum in the range <code>[1, 1,000,000,000]</code>.
@@ -83,7 +85,7 @@ public interface FB_Prep_HashMaps__PairSums_Count {
                     .mapToLong(e ->
                         e.getValue() * countngMap.getOrDefault(K - e.getKey(), 0L))
                     .sum();
-                return (int)(halfCount + nonHalfCount);
+                return Math.toIntExact(halfCount + nonHalfCount);
             }
         }
     }

@@ -21,6 +21,8 @@ import static java.util.stream.Collectors.groupingBy;
 public interface FB_Prep_Arrays__Reverse_SubArr_To_Make_Equal {
 
     /**
+     * Solution entry-point.
+     *
      * @param A an array of integers in the range <code>[0, 1,000,000,000]</code>.
      * @param B an array of integers in the range <code>[0, 1,000,000,000]</code>.
      * @return <code>true</code> - if there is a way to meak arrays equal, and <code>false</code> - otherwise

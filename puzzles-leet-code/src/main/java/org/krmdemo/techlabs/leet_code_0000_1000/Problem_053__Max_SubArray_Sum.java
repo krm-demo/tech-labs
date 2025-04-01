@@ -137,7 +137,8 @@ public interface Problem_053__Max_SubArray_Sum {
             }
 
             private static IntFunction<IntStream> withPrevMin(
-                ToIntBiFunction<Integer,Integer> withMinFunc) {
+                ToIntBiFunction<Integer,Integer> withMinFunc
+            ) {
                 Integer[] prevMin = new Integer[] { null };
                 return value -> {
                     Integer prevMinValue = prevMin[0];
