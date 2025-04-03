@@ -36,7 +36,7 @@ public interface FB_Prep_Arrays__Contiguous_SubArrays {
 
         @Override
         public int[] countSubArrays(int[] arr) {
-            // TODO: to be implemented in a simialr way as for daily-temperature
+            // TODO: to be implemented in a similar way as for daily-temperature
             throw new UnsupportedOperationException("not implemented yet");
             //return new int[0];
         }
