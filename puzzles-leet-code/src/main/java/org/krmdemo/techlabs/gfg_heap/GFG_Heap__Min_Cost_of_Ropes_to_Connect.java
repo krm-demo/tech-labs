@@ -17,20 +17,22 @@ import java.util.*;
  * aleksey.kurmanov@gmail.com
  * 1qa@WS0ok(IJ
  * </pre></small>
+ *
+ * @see org.krmdemo.techlabs.interview.meta.FB_Prep_Greedy__Slow_Sum (the same, but <b>max</b> except <b>min</b>)
  */
 public interface GFG_Heap__Min_Cost_of_Ropes_to_Connect {
 
     /**
      * GFG-Solution entry-point
      *
-     * @param arr <code>i</code>th element represent <code>i</code>th rope length
+     * @param arr <code>i</code>th element represent <code>i</code>th rope length (which is positive)
      * @return <b>minimum total cost</b> after connecting all ropes
      */
     int minCost(int[] arr);
 
     /**
      * The proposed solution is based on {@link PriorityQueue}
-     * and appears to be a classic greedy (the strict proof is not trivial)
+     * and appears to be a classic greedy algorithm (the strict proof is not trivial)
      */
     enum Solution implements GFG_Heap__Min_Cost_of_Ropes_to_Connect {
         DEFAULT;
