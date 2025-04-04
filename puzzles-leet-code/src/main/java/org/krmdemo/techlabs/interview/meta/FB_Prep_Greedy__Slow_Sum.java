@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toCollection;
 
 /**
  * <h3><a href="https://www.metacareers.com/profile/coding_practice_question/?problem_id=2869293499822992&psid=275492097255885&practice_plan=0&p=GENERAL_SWE&b=0111122">
- *     Greedy #1. Slow_Sum.
+ *     Greedy #1. Slow Sum.
  * </a></h3>
  * Suppose we have a list of <b><code>N</code></b> numbers, and repeat the following operation
  * until we're left with only a single number: <i>choose any two numbers and replace them with their sum</i>.
