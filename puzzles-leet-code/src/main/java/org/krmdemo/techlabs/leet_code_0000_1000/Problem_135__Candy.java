@@ -27,7 +27,7 @@ public interface Problem_135__Candy {
     /**
      * Solution entry-point.
      *
-     * @param ratings integer array of children's ratings <code>0 <= ratings[i] <= 2 * 104</code>
+     * @param ratings integer array of children's ratings <code>0 <= ratings[i] <= 2 * 10^4</code>
      * @return minimum number of candies to distribute among the children.
      */
     int candy(int[] ratings);
